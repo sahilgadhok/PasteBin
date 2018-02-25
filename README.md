@@ -5,3 +5,10 @@
 - Shannon Lee (100303637)
 - Sanchit Luthra (1001429643)
 - Sahil Gadhok (997782555)
+
+## Installation
+
+```sh
+npm install
+npm run build
+```
