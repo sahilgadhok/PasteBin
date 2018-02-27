@@ -5,8 +5,10 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 module.exports = {
   entry: {
     vendor: [
+      'es6-promise',
       'vue',
       'vue-router',
+      'fetch-ponyfill',
       'bootstrap/dist/css/bootstrap.css'
     ],
     app: './src/main.js',

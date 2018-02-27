@@ -23,6 +23,9 @@
 </template>
 
 <script>
+import fetchPonyfill from 'fetch-ponyfill';
+const {fetch, Headers, Request, Response} = fetchPonyfill();
+
 export default {
   name: 'Search',
   data: function () {
