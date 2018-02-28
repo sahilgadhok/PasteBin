@@ -23,8 +23,7 @@
 </template>
 
 <script>
-import fetchPonyfill from 'fetch-ponyfill';
-const {fetch, Headers, Request, Response} = fetchPonyfill();
+import axios from 'axios';
 
 export default {
   name: 'Search',
@@ -42,11 +41,9 @@ export default {
   methods: {
     searchFiles: function () {
       let vm = this;
-      fetch('https://api.github.com/gists/public')
+      axios.get('https://api.github.com/gists/public')
         .then(function (response) {
-          return response.json();
-        })
-        .then(function (arr) {
+          const arr = response.data;
           console.log(arr);
           // TODO - Reduce this array to a collection of files
           vm.table.data = arr.map(function (row) {

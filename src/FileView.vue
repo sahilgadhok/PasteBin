@@ -6,8 +6,7 @@
 </template>
 
 <script>
-import fetchPonyfill from 'fetch-ponyfill';
-const {fetch} = fetchPonyfill();
+import axios from 'axios';
 
 export default {
   name: 'FileView',
@@ -17,9 +16,8 @@ export default {
       content: ''
     };
 
-    fetch(data.filename)
-      .then(function (response) {
-        return response.text();
+    axios.get(data.filename, {
+        responseType: 'text',
       })
       .then(function (text) {
         data.content = text;

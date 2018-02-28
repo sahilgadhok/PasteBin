@@ -8,7 +8,7 @@ module.exports = {
       'es6-promise',
       'vue',
       'vue-router',
-      'fetch-ponyfill',
+      'axios',
       'bootstrap/dist/css/bootstrap.css'
     ],
     app: './src/main.js',
