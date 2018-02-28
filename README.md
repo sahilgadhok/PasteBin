@@ -12,3 +12,18 @@
 npm install
 npm run build
 ```
+
+# Dependencies
+
+- CSS
+    - Bootstrap
+- Javascript
+    - AJAX (axios)
+    - Polyfill (es6-promise)
+    - UI (vue, vue-router)
+
+# Browser Support
+
+- IE 9+
+- Firefox ESR
+- Chrome 56+
