@@ -2,10 +2,10 @@
   <div>
     <div>Username {{username}}</div>
     <div>Groups
-      <span v-for="group in groups">{{group}}</span>
+      <span v-for="(group, index) in groups" v-bind:key="index">{{group}}</span>
     </div>
     <div>Files
-      <a v-for="file in files" v-bind:href="file.url">{{file.name}}</a>
+      <a v-for="file in files" v-bind:key="file.url" v-bind:href="file.url">{{file.name}}</a>
     </div>
   </div>
 </template>

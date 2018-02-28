@@ -2,7 +2,7 @@
   <div id="app">
     <h1>File Host App</h1>
     <ul>
-      <li v-for="route in routes">
+      <li v-for="route in routes" v-bind:key="route.path">
         <router-link exact v-bind:to="route.path">{{route.name}}</router-link>
       </li>
     </ul>

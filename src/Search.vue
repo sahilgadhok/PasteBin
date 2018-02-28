@@ -4,18 +4,21 @@
     <table>
       <thead>
         <tr>
-          <th v-for="header in table.headers">{{header}}</th>
+          <th v-for="(prop, index) in table.props" v-bind:key="index">
+            <span>{{table.headers[prop]}}</span>
+          </th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="row in table.data">
-          <td>{{row.filename}}</td>
-          <td>{{row.url}}</td>
+        <tr v-for="row in table.data" v-bind:key="row.id">
+          <td v-for="(prop, index) in table.props" v-bind:key="index">
+            <span>{{row[prop]}}</span>
+          </td>
         </tr>
       </tbody>
       <tfoot>
         <tr>
-          <td v-bind:colspan="table.headers.length">1</td>
+          <td v-bind:colspan="table.props.length">1</td>
         </tr>
       </tfoot>
     </table>
@@ -30,10 +33,11 @@ export default {
   data: function () {
     return {
       table: {
-        headers: [
-          'filename',
-          'url',
-        ],
+        props: ['filename', 'url'],
+        headers: {
+          filename: 'Filename',
+          url: 'Url',
+        },
         data: []
       }
     };
@@ -48,6 +52,7 @@ export default {
           // TODO - Reduce this array to a collection of files
           vm.table.data = arr.map(function (row) {
             return {
+              id: row.id,
               filename: row.files[Object.keys(row.files)[0]].filename,
               url: row.html_url
             }
