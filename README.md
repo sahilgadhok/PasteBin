@@ -13,17 +13,23 @@ npm install
 npm run build
 ```
 
-# Dependencies
+## Dependencies
 
 - CSS
-    - Bootstrap
+    - [Bootstrap][bootstrap-3]
 - Javascript
-    - AJAX (axios)
-    - Polyfill (es6-promise)
-    - UI (vue, vue-router)
+    - AJAX ([axios][github-axios])
+    - Polyfill ([es6-promise][github-es6-promise])
+    - UI ([vue][github-vue], [vue-router][github-vue-router])
 
-# Browser Support
+## Browser Support
 
 - IE 9+
 - Firefox ESR
 - Chrome 56+
+
+[bootstrap-3]: https://getbootstrap.com/docs/3.3/
+[github-axios]: https://github.com/axios/axios
+[github-es6-promise]: https://github.com/stefanpenner/es6-promise
+[github-vue]: https://github.com/vuejs/vue
+[github-vue-router]: https://github.com/vuejs/vue-router
