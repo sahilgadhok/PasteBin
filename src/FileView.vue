@@ -19,8 +19,8 @@ export default {
     axios.get(data.filename, {
         responseType: 'text',
       })
-      .then(function (text) {
-        data.content = text;
+      .then(function (response) {
+        data.content = response.data;
       })
       .catch(function (error) {
         console.error(error);
