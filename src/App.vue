@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="container-fluid">
     <h1>File Host App</h1>
     <ul>
       <li v-for="route in routes" v-bind:key="route.path">
