@@ -6,7 +6,12 @@
 - Sanchit Luthra (1001429643)
 - Sahil Gadhok (997782555)
 
-## Installation
+## Usage
+
+Clone the repo and open index.html in the browser.
+The repo includes all runtime dependencies required for index.html to display a SPA.
+
+## Compile from Source
 
 ```sh
 npm install
