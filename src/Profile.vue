@@ -5,7 +5,7 @@
       <span v-for="(group, index) in groups" v-bind:key="index">{{group}}</span>
     </div>
     <div>Files
-      <a v-for="file in files" v-bind:key="file.url" v-bind:href="file.url">{{file.name}}</a>
+      <a target="_blank" v-for="file in files" v-bind:key="file.url" v-bind:href="file.url">{{file.name}}</a>
     </div>
   </div>
 </template>
@@ -18,8 +18,8 @@ export default {
       username: 'Foo',
       groups: ['Bar'],
       files: [{
-        name: 'package.json',
-        url: './index.html#/file',
+        name: 'gistfile1.txt',
+        url: '#/file?hash=janlazo/a828a18c9ea19b9f84b2cc0c640a870d/raw/04682927b385ecc2eee74c5e40f2e2f022254023/gistfile1.txt'
       }]
     };
   }

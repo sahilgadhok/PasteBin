@@ -17,7 +17,9 @@ export default {
   name: 'App',
   data: function () {
     return {
-      routes: routes
+      routes: routes.filter(function (route) {
+        return route.name && typeof route.name === 'string';
+      })
     };
   }
 }

@@ -21,7 +21,11 @@ export default [
   },
   {
     path: '/file',
-    name: 'File',
     component: FileView,
+    props: function (route) {
+      return {
+        hash: route.query.hash
+      }
+    }
   }
 ];

@@ -77,7 +77,8 @@ export default {
               content: content
             })
             .then(function (response) {
-              vm.newFile.url = response.data.html_url;
+              const file = response.data.files[filename];
+              vm.newFile.url = file.raw_url.replace(/^https.*\.com\//, '#/file?hash=');
               vm.newFile.show = true;
             })
             .catch(function () {
@@ -89,6 +90,11 @@ export default {
         const reader = new FileReader();
         reader.readAsText(vm.file);
         reader.onload = function (event) {
+          if (!event.target.result) {
+            vm.error = 'File is empty';
+            return;
+          }
+
           send(vm.file.name, event.target.result);
         };
       } else {

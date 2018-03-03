@@ -50,7 +50,7 @@ export default {
             return {
               id: row.id,
               filename: file.filename,
-              url: file.raw_url
+              url: file.raw_url.replace(/^https.*\.com\//, '#/file?hash=')
             };
           });
           vm.table.refresh(newData);
