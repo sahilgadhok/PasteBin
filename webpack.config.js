@@ -9,6 +9,8 @@ module.exports = {
       'vue',
       'vue-router',
       'axios',
+      'smart-table-core',
+      'smart-table-vue',
       'bootstrap/dist/css/bootstrap.css'
     ],
     app: './src/main.js',
@@ -38,7 +40,7 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        exclude: /node_modules/
+        exclude: /node_modules\/(?!(smart-table-events)\/).*/,
       },
       {
         test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2|ico)$/,

@@ -1,5 +1,5 @@
 import Home from './Home.vue';
-import Search from './Search.vue';
+import Search from './search/Search.vue';
 import Profile from './Profile.vue';
 import FileView from './FileView.vue';
 
