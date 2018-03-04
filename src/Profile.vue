@@ -1,65 +1,113 @@
 <template>
   <div class="container-fluid">
-	<div class="row">
-	<div>
-    <h3 class="profile-header animated slideInLeft">{{profileInfo.name}}'s Profile</h3>
-	</div>
-		<div class="col-md-3">
-			<div>
-				<div class="form-group">
-					<label for="email">Email Address</label>
-					<h4 id="email">{{profileInfo.email}}</h4>
+	<div class="row panel">
+		<div class="panel-heading">
+			<!-- Differentiate friends from yourself -->
+    	<h3 class="profile-header" v-if="profileInfo.name == 'Tim Struggles'">Your Profile</h3>
+			<h3 class="profile-header" v-if="profileInfo.name != 'Tim Struggles'">{{profileInfo.name}}'s Profile</h3>
+		</div>
+		<div class="col-md-4 col-sm-4 col-xs">
+			<!-- The side panel containing the account info -->
+			<div class="panel panel-primary" id="accountInfo">
+				<div class="panel-heading ">
+					<h5> <span class="glyphicon glyphicon-user" ></span> Account Info </h5>
 				</div>
-				<div class="form-group">
-					<label for="userName">User Name</label>
-					<h4 id="userName">{{profileInfo.userName}}</h4>
-				</div>
-        		<div class="form-group">
-          			<label for="friends">Friends</label>
-					<ul>
-						<h4 v-for="friend in profileInfo.friends">
-							{{friend.userName}}
+				<div class="panel-body">
+					<div class="form-group">
+						<label for="email">Email Address</label>
+						<h4 id="email">{{profileInfo.email}}</h4>
+					</div>
+					<div class="form-group">
+						<label for="userName">User Name</label>
+						<h4 id="userName">{{profileInfo.userName}}</h4>
+					</div>
+        	<div class="form-group">
+        		<label for="friends">Friends</label>
+						<h4 class="friendLink" v-for="friend in profileInfo.friends" v-bind:key="friend.name">
+							<a v-on:click="switchInfo()">{{friend.userName}}</a>
 						</h4>
-					</ul>
-        		</div>
+        	</div>
+				</div>
 			</div>
 		</div>
-		<div class="col-md-3">
-			<h3>Pastes</h3>
-			<ul>
-				<h4 v-for="paste in profileInfo.pastes">
-					{{paste.text}}
-				</h4>
-			</ul>
+		<!-- The main panel containing the users Files the user has uploaded -->
+		<div class="col-md-8 col-sm-8">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h5> <span class="glyphicon glyphicon-list" ></span> Uploads</h5>
+				</div>
+				<div class="panel-body">
+					<h4 v-for="paste in profileInfo.pastes" v-bind:key="paste.location">
+						<a v-bind:href="paste.location">{{paste.title}}</a>
+					</h4>
+					<h4 v-if="profileInfo.pastes.length == 0">Your friend {{profileInfo.name}} hasn't uploaded andthing yet :(</h4>
+				</div>
+			</div>
 		</div>
 	</div>
-</div>
+	</div>
 </template>
 
 <script>
 import Vue from 'vue';
-var profileInfo = {
+// The info of the currently logged in user
+var timStruggles = {
   name: "Tim Struggles",
   email: "timstruggles@mail.com",
   userName: 'TheStruggle',
-  pastes: [],
+  pastes: [
+		{ title: "package.json", location: "/#/file"}
+	],
 	friends: [
-		{userName: "pasterer"},
-		{userName: "teh pasterer"}
+		{userName: "Foo"}
 	]
 }
+// the info of the user's friend
+var foo = {
+  name: "Foo",
+  email: "foo@mail.com",
+  userName: 'Foo',
+  pastes: [],
+	friends: [
+		{userName: "TheStruggle"}
+	]
+}
+
+var index = 0
+var profileInfo = timStruggles
 
 export default {
   name: 'Profile',
   data: function () {
     return {
-      profileInfo: profileInfo
-    };
-  }
+			timStruggles: timStruggles,
+			foo: foo,
+			profileInfo: profileInfo,
+			index: 0
+		};
+	},
+	methods: {
+		switchInfo: function() {
+			if (this.index == 0) {
+				//console.log("tim")
+				this.index = 1
+				this.profileInfo = this.foo
+			} else {
+				//console.log("Foo")
+				this.index = 0
+				this.profileInfo = this.timStruggles
+			}
+		}
+	}
 }
 </script>
 
 <style scoped>
+
+.panel {
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+	background: rgb(250, 250, 250)
+}
 
 .subsection {
   outline: 1px solid black;
@@ -68,6 +116,17 @@ export default {
 
 .profile-header {
   text-align: center;
-  /* padding-left: 5px; */
+  
 }
+
+#accountInfo {
+	overflow-wrap: break-word;
+}
+
+.form-group {
+	border-bottom: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: rgba(0,0,0,0.25);
+}
+
 </style>
