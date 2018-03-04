@@ -37,8 +37,8 @@
 					<h5> <span class="glyphicon glyphicon-list" ></span> Uploads</h5>
 				</div>
 				<div class="panel-body">
-					<h4 v-for="paste in profileInfo.pastes" v-bind:key="paste.location">
-						<a v-bind:href="paste.location">{{paste.title}}</a>
+					<h4 v-for="paste in profileInfo.pastes" v-bind:key="paste.name">
+						<a v-bind:href="paste.url">{{paste.name}}</a>
 					</h4>
 					<h4 v-if="profileInfo.pastes.length == 0">Your friend {{profileInfo.name}} hasn't uploaded andthing yet :(</h4>
 				</div>
@@ -56,7 +56,10 @@ var timStruggles = {
   email: "timstruggles@mail.com",
   userName: 'TheStruggle',
   pastes: [
-		{ title: "package.json", location: "/#/file"}
+		{ 
+			name: 'gistfile1.txt',
+			url: '#/file?hash=janlazo/a828a18c9ea19b9f84b2cc0c640a870d/raw/04682927b385ecc2eee74c5e40f2e2f022254023/gistfile1.txt'
+		}
 	],
 	friends: [
 		{userName: "Foo"}
