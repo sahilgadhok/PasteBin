@@ -10,6 +10,15 @@
           <div class="comment">{{ comment.content }}</div>
         </li>
       </ul>
+      <h4>Leave a Comment</h4>
+      <div class="form-group">
+        <textarea class="form-control" rows="5">
+        </textarea>
+      </div>
+      <div class="form-group">
+        <button class="btn btn-primary" type="button"
+        v-on:click="addComment()">Submit</button>
+      </div>
     </div>
   </div>
 </template>
