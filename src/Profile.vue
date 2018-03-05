@@ -1,50 +1,50 @@
 <template>
-  <div class="container-fluid">
-	<div class="row panel">
-		<div class="panel-heading">
-			<!-- Differentiate friends from yourself -->
-    	<h3 class="profile-header" v-if="profileInfo.name == 'Tim Struggles'">Your Profile</h3>
-			<h3 class="profile-header" v-if="profileInfo.name != 'Tim Struggles'">{{profileInfo.name}}'s Profile</h3>
-		</div>
-		<div class="col-md-4 col-sm-4 col-xs">
-			<!-- The side panel containing the account info -->
-			<div class="panel panel-primary" id="accountInfo">
-				<div class="panel-heading ">
-					<h5> <span class="glyphicon glyphicon-user" ></span> Account Info </h5>
+  	<div class="container-fluid">
+		<div class="row panel">
+			<div class="panel-heading">
+				<!-- Differentiate friends from yourself -->
+			<h3 class="profile-header" v-if="profileInfo.name == 'Tim Struggles'">Your Profile</h3>
+				<h3 class="profile-header" v-if="profileInfo.name != 'Tim Struggles'">{{profileInfo.name}}'s Profile</h3>
+			</div>
+			<div class="col-md-4 col-sm-4 col-xs">
+				<!-- The side panel containing the account info -->
+				<div class="panel panel-primary" id="accountInfo">
+					<div class="panel-heading ">
+						<h5> <span class="glyphicon glyphicon-user" ></span> Account Info </h5>
+					</div>
+					<div class="panel-body">
+						<div class="form-group">
+							<label for="email">Email Address</label>
+							<h4 id="email">{{profileInfo.email}}</h4>
+						</div>
+						<div class="form-group">
+							<label for="userName">User Name</label>
+							<h4 id="userName">{{profileInfo.userName}}</h4>
+						</div>
+						<div class="form-group">
+							<label for="friends">Friends</label>
+							<h4 class="friendLink" v-for="friend in profileInfo.friends" v-bind:key="friend.name">
+								<a v-on:click="switchInfo()">{{friend.userName}}</a>
+							</h4>
+						</div>
+					</div>
 				</div>
-				<div class="panel-body">
-					<div class="form-group">
-						<label for="email">Email Address</label>
-						<h4 id="email">{{profileInfo.email}}</h4>
+			</div>
+			<!-- The main panel containing the users Files the user has uploaded -->
+			<div class="col-md-8 col-sm-8">
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+						<h5> <span class="glyphicon glyphicon-list" ></span> Uploads</h5>
 					</div>
-					<div class="form-group">
-						<label for="userName">User Name</label>
-						<h4 id="userName">{{profileInfo.userName}}</h4>
-					</div>
-        	<div class="form-group">
-        		<label for="friends">Friends</label>
-						<h4 class="friendLink" v-for="friend in profileInfo.friends" v-bind:key="friend.name">
-							<a v-on:click="switchInfo()">{{friend.userName}}</a>
+					<div class="panel-body">
+						<h4 v-for="paste in profileInfo.pastes" v-bind:key="paste.name">
+							<a v-bind:href="paste.url">{{paste.name}}</a>
 						</h4>
-        	</div>
+						<h4 v-if="profileInfo.pastes.length == 0">Your friend {{profileInfo.name}} hasn't uploaded andthing yet :(</h4>
+					</div>
 				</div>
 			</div>
 		</div>
-		<!-- The main panel containing the users Files the user has uploaded -->
-		<div class="col-md-8 col-sm-8">
-			<div class="panel panel-primary">
-				<div class="panel-heading">
-					<h5> <span class="glyphicon glyphicon-list" ></span> Uploads</h5>
-				</div>
-				<div class="panel-body">
-					<h4 v-for="paste in profileInfo.pastes" v-bind:key="paste.name">
-						<a v-bind:href="paste.url">{{paste.name}}</a>
-					</h4>
-					<h4 v-if="profileInfo.pastes.length == 0">Your friend {{profileInfo.name}} hasn't uploaded andthing yet :(</h4>
-				</div>
-			</div>
-		</div>
-	</div>
 	</div>
 </template>
 
