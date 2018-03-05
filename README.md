@@ -8,8 +8,8 @@
 
 ## Usage
 
-Clone the repo and open index.html in the browser.
-The repo includes all runtime dependencies required for index.html to display a SPA.
+Clone the repo and open index.html in the browser with Javascript enabled.
+The repo includes all runtime dependencies required for index.html to display a Single-Page Application (SPA).
 
 ## Compile from Source
 
