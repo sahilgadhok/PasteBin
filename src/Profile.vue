@@ -10,7 +10,7 @@
         <!-- The side panel containing the account info -->
         <div class="panel panel-primary" id="accountInfo">
           <div class="panel-heading ">
-            <h5> <span class="glyphicon glyphicon-user" ></span> Account Info </h5>
+            <h5>Account Info </h5>
           </div>
           <div class="panel-body">
             <div class="form-group">
@@ -34,7 +34,7 @@
       <div class="col-md-8 col-sm-8">
         <div class="panel panel-primary">
           <div class="panel-heading">
-            <h5> <span class="glyphicon glyphicon-list" ></span> Uploads</h5>
+            <h5>Uploads</h5>
           </div>
           <div class="panel-body">
             <h4 v-for="paste in profileInfo.pastes" v-bind:key="paste.name">
@@ -88,6 +88,9 @@ export default {
     };
   },
   methods: {
+    // Switch the info when Friend is selected
+    // Sice there is only front end create adhoc method
+    // rather than pull from db
     switchInfo: function() {
       if (this.index == 0) {
         //console.log("tim")
@@ -110,14 +113,8 @@ export default {
   background: rgb(250, 250, 250)
 }
 
-.subsection {
-  outline: 1px solid black;
-  padding: 5px;
-}
-
 .profile-header {
   text-align: center;
-
 }
 
 #accountInfo {
