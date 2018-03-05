@@ -50,6 +50,9 @@ export default {
             return {
               id: row.id,
               filename: file.filename,
+              user: (row.owner && typeof row.owner === 'object' &&
+                     typeof row.owner.login === 'string') ? row.owner.login : '',
+              datetime: row.created_at,
               url: file.raw_url.replace(/^https.*\.com\//, '#/file?hash=')
             };
           });

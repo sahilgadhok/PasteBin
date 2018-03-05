@@ -1,7 +1,9 @@
 <template>
   <table class="table table-striped">
     <col class="col-xs-4">
-    <col class="col-xs-8">
+    <col class="col-xs-3">
+    <col class="col-xs-3">
+    <col class="col-xs-2">
     <thead>
       <tr>
         <th v-for="(prop, index) in table.props" v-bind:key="index"
@@ -14,13 +16,17 @@
           <st-col-filter v-bind:smart-table="smartTable" st-filter="filename">
           </st-col-filter>
         </th>
+        <th>
+          <st-col-filter v-bind:smart-table="smartTable" st-filter="user">
+          </st-col-filter>
+        </th>
       </tr>
     </thead>
     <tbody v-if="displayed.length > 0">
       <tr v-for="row in displayed" v-bind:key="makeRowKey(row)">
         <td v-for="(prop, index) in table.props" v-bind:key="index">
           <a target="_blank" v-if="prop === 'url'"
-          v-bind:href="row.value[prop]">{{row.value[prop]}}</a>
+          v-bind:href="row.value[prop]">Link</a>
           <span v-else>{{row.value[prop]}}</span>
         </td>
       </tr>
@@ -53,9 +59,11 @@ export default {
   data: function () {
     return {
       table: {
-        props: ['filename', 'url'],
+        props: ['filename', 'user', 'datetime', 'url'],
         headers: {
           filename: 'Filename',
+          user: 'User',
+          datetime: 'DateTime',
           url: 'Url',
         },
       }
