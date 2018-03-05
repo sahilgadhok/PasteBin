@@ -8,6 +8,7 @@ const router = new VueRouter({
   routes: routes
 });
 
+// Render the app component to start the application
 Vue.use(VueRouter);
 new Vue({
   el: '#app',

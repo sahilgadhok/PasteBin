@@ -41,6 +41,7 @@ export default {
     };
   },
   methods: {
+    // Return a unique key for the given value.
     makePageKey: function (val) {
       return val + '-' + Date.now();
     }
@@ -51,6 +52,8 @@ export default {
         this.stState.filteredCount > 0 ?
           Math.ceil(this.stState.filteredCount / this.stState.size) : 1;
       const half = Math.floor(this.numPages / 2);
+
+      // Determine the page range, displayed in the table footer
       let pages = [];
       if (this.stState.page <= half) {
         // Left Edge

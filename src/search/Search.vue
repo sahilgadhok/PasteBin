@@ -42,6 +42,8 @@ export default {
   methods: {
     searchFiles: function () {
       const vm = this;
+      // Get public files only
+      // TODO - Allow user to search their private files
       axios.get('https://api.github.com/gists/public?per_page=100')
         .then(function (response) {
           const arr = response.data;

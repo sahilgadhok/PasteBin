@@ -17,6 +17,7 @@ export default {
   name: 'App',
   data: function () {
     return {
+      // Display public/named routes only
       routes: routes.filter(function (route) {
         return route.name && typeof route.name === 'string';
       })

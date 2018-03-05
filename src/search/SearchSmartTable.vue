@@ -59,7 +59,9 @@ export default {
   data: function () {
     return {
       table: {
+        // Table Column Order
         props: ['filename', 'user', 'datetime', 'url'],
+        // Table Header
         headers: {
           filename: 'Filename',
           user: 'User',
@@ -71,6 +73,7 @@ export default {
   },
   methods: {
     // Assume row is from SmartTable's "displayed" array
+    // Return a unique key for the given row.
     makeRowKey: function (row) {
       return [row.value.id, row.value.filename, Date.now()].join('-');
     }
