@@ -36,6 +36,7 @@ export default {
     const data = {
       filename: filepathArr[filepathArr.length - 1],
       content: '',
+      // Mock data for comments. To be implemented in the back-end
       comments: [
         {
           user: 'Alice',
