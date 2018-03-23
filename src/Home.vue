@@ -77,8 +77,7 @@ export default {
               content: content
             })
             .then(function (response) {
-              const file = response.data.files[filename];
-              vm.newFile.url = file.raw_url.replace(/^https.*\.com\//, '#/file?hash=');
+              vm.newFile.url = '#/file?hash=' + response.data.id;
               vm.newFile.show = true;
             })
             .catch(function () {

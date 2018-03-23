@@ -5,7 +5,7 @@
     <div class="comments-box">
       <h3>Comments</h3>
       <ul>
-        <li v-for="comment in comments">
+        <li v-for="comment in comments" v-bind:key="makeRowKey(comment)">
           <p class="comment-user">{{ comment.user }}</p>
           <div class="comment">{{ comment.content }}</div>
         </li>
@@ -30,37 +30,41 @@ export default {
   name: 'FileView',
   props: ['hash'],
   data: function () {
-    // Assume that the hash points to a valid Github Gist
-    const resourcePrefix = 'https://gist.githubusercontent.com/';
-    const filepathArr = this.hash.split('/');
-    const data = {
-      filename: filepathArr[filepathArr.length - 1],
+    return {
+      filename: '',
       content: '',
-      // Mock data for comments. To be implemented in the back-end
-      comments: [
-        {
-          user: 'Alice',
-          content: 'Test comment'
-        },
-        {
-          user: 'Bob',
-          content: 'Test comment 2'
-        }
-      ]
+      comments: []
     };
+  },
+  methods: {
+    makeRowKey: function (row) {
+      return [row.id, Date.now()].join('-');
+    }
+  },
+  created: function () {
+    const vm = this;
 
-    axios.get(resourcePrefix + this.hash, {
-        responseType: 'text',
-      })
+    // Assume that the hash points to a valid Github Gist
+    axios.get('https://api.github.com/gists/' + this.hash)
+      // file
       .then(function (response) {
-        data.content = response.data;
+        const files = response.data.files;
+        vm.filename = Object.keys(files)[0];
+        vm.content = files[vm.filename].content;
+        return axios.get(response.data.comments_url);
+      })
+      // comments
+      .then(function (response) {
+        vm.comments = response.data.map(row => ({
+          id: row.id,
+          user: row.user.login,
+          content: row.body
+        }));
       })
       .catch(function (error) {
         console.error(error);
       });
-
-    return data;
-  }
+  },
 }
 </script>
 
