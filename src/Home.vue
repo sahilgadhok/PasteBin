@@ -77,7 +77,7 @@ export default {
               content: content
             })
             .then(function (response) {
-              vm.newFile.url = '#/file?hash=' + response.data.id;
+              vm.newFile.url = '#/file/' + response.data.id;
               vm.newFile.show = true;
             })
             .catch(function () {

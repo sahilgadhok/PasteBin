@@ -57,7 +57,7 @@ var timStruggles = {
   pastes: [
     {
       name: 'gistfile1.txt',
-      url: '#/file?hash=a828a18c9ea19b9f84b2cc0c640a870d'
+      url: '#/file/a828a18c9ea19b9f84b2cc0c640a870d'
     }
   ],
   friends: [

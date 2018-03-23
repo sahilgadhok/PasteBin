@@ -55,7 +55,7 @@ export default {
               user: (row.owner && typeof row.owner === 'object' &&
                      typeof row.owner.login === 'string') ? row.owner.login : '',
               datetime: row.created_at,
-              url: '#/file?hash=' + row.id
+              url: '#/file/' + row.id
             };
           });
           vm.table.refresh(newData);

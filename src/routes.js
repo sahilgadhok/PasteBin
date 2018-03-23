@@ -20,12 +20,8 @@ export default [
     component: Profile,
   },
   {
-    path: '/file',
+    path: '/file/:hash',
     component: FileView,
-    props: function (route) {
-      return {
-        hash: route.query.hash
-      }
-    }
+    props: true
   }
 ];
