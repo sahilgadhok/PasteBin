@@ -1,10 +1,14 @@
 <template>
   <div id="app" class="container-fluid">
     <h1>FileHub</h1>
-    <ul class="nav nav-tabs">
-      <li v-for="route in routes" v-bind:key="route.path">
-        <router-link exact v-bind:to="route.path">{{route.name}}</router-link>
-      </li>
+    <div class="text-right">
+      <router-link exact to="/profile">Profile</router-link>
+    </div>
+    <ul class="nav nav-pills">
+      <router-link tag="li" exact active-class="active"
+      v-for="route in routes" v-bind:key="route.path" v-bind:to="route.path">
+        <a href="javascript:void(0)">{{route.name}}</a>
+      </router-link>
     </ul>
     <router-view></router-view>
   </div>
