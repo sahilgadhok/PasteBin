@@ -6,8 +6,8 @@
       <h3>Comments</h3>
       <ul>
         <li v-for="comment in comments" v-bind:key="makeRowKey(comment)">
-          <p class="comment-user">{{ comment.user }}</p>
-          <div class="comment">{{ comment.content }}</div>
+          <p class="comment-user">{{comment.user}}</p>
+          <div class="comment">{{comment.content}}</div>
         </li>
       </ul>
       <h4>Leave a Comment</h4>
@@ -28,7 +28,12 @@ import axios from 'axios';
 
 export default {
   name: 'FileView',
-  props: ['hash'],
+  props: {
+    hash: {
+      type: String,
+      required: true
+    }
+  },
   data: function () {
     return {
       filename: '',

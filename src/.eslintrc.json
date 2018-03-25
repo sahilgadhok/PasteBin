@@ -11,9 +11,29 @@
   },
   "extends": [
     "eslint:recommended",
-    "plugin:vue/essential"
+    "plugin:vue/strongly-recommended"
   ],
   "rules": {
-    "no-console": "off"
+    "no-console": "off",
+    "vue/html-indent": ["error", 2, {
+      "attribute": 0,
+      "alignAttributesVertically": false
+    }],
+    "vue/html-self-closing": ["error", {
+      "html": {
+        "normal": "any",
+        "component": "never"
+      }
+    }],
+    "vue/max-attributes-per-line": ["error", {
+      "singleline": 4,
+      "multiline": {
+        "max": 4,
+        "allowFirstLine": true
+      }
+    }],
+    "vue/mustache-interpolation-spacing": ["error", "never"],
+    "vue/v-bind-style": "longform",
+    "vue/v-on-style": "longform"
   }
 }
