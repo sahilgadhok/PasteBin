@@ -1,6 +1,7 @@
 <template>
   <div v-if="sessionToken">
-    <router-link exact to="/profile">Profile</router-link>
+    <router-link class="btn btn-default" exact
+    v-bind:to="'/profile/' + sessionUsername">Profile</router-link>
     <button class="btn btn-default" type="button"
     v-on:click="logout()">Logout</button>
   </div>
@@ -26,7 +27,8 @@ export default {
       form: {
         username: '',
         password: '',
-      }
+      },
+      sessionUsername: 'TheStruggle'
     };
   },
   store: ['sessionToken'],
