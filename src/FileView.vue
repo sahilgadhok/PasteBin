@@ -1,25 +1,21 @@
 <template>
-  <div id="container">
-    <div>{{filename}}</div>
+  <div class="container">
+    <h2>{{filename}}</h2>
     <pre>{{content}}</pre>
-    <div class="comments-box">
-      <h3>Comments</h3>
-      <ul>
-        <li v-for="comment in comments" v-bind:key="makeRowKey(comment)">
-          <p class="comment-user">{{comment.user}}</p>
-          <div class="comment">{{comment.content}}</div>
-        </li>
-      </ul>
-      <h4>Leave a Comment</h4>
+    <h3>Comments</h3>
+    <ul class="comments">
+      <li v-for="comment in comments" v-bind:key="makeRowKey(comment)">
+        <strong>{{comment.user}}</strong>
+        <p>{{comment.content}}</p>
+      </li>
+    </ul>
+    <form v:on-submit.prevent="onSubmit">
       <div class="form-group">
-        <textarea class="form-control" rows="5">
-        </textarea>
+        <label for="comment-self">Leave a Comment</label>
+        <textarea id="comment-self" class="form-control" rows="5"></textarea>
       </div>
-      <div class="form-group">
-        <button class="btn btn-primary" type="button"
-        v-on:click="addComment()">Submit</button>
-      </div>
-    </div>
+      <button class="btn btn-primary" type="button" disabled>Submit</button>
+    </form>
   </div>
 </template>
 
@@ -74,27 +70,14 @@ export default {
 </script>
 
 <style scoped>
-li {
+.comments {
+  list-style-type: none;
+  padding-left: 0;
+}
+.comments > li {
   border: 1px solid #000;
   border-radius: 5px;
-  list-style-type: none;
-  margin: 5px;
+  margin: 10px 0;
   padding: 10px;
-}
-
-pre {
-  width: 100%;
-}
-
-#container {
-  width: 60%;
-}
-
-.comments-box {
-  width: 80%;
-}
-
-.comment-user {
-  font-size: 14pt
 }
 </style>
