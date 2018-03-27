@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <div class="container-fluid" v-if="sessionToken && profileInfo">
     <div class="row panel">
       <div class="panel-heading">
         <!-- Differentiate friends from yourself -->
@@ -50,7 +50,7 @@
 
 <script>
 // The info of the currently logged in user
-var timStruggles = {
+const timStruggles = {
   name: "Tim Struggles",
   email: "timstruggles@mail.com",
   userName: 'TheStruggle',
@@ -65,7 +65,7 @@ var timStruggles = {
   ]
 }
 // the info of the user's friend
-var foo = {
+const foo = {
   name: "Foo",
   email: "foo@mail.com",
   userName: 'Foo',
@@ -75,17 +75,25 @@ var foo = {
   ]
 }
 
-var profileInfo = timStruggles
-
 export default {
   name: 'Profile',
   data: function () {
     return {
-      timStruggles: timStruggles,
-      foo: foo,
-      profileInfo: profileInfo,
       index: 0
     };
+  },
+  store: ['sessionToken'],
+  computed: {
+    profileInfo: function () {
+      if (!this.sessionToken) {
+        return null;
+      }
+
+      if (this.index == 0) {
+        return foo;
+      }
+      return timStruggles;
+    }
   },
   methods: {
     // Switch the info when Friend is selected
@@ -93,13 +101,9 @@ export default {
     // rather than pull from db
     switchInfo: function() {
       if (this.index == 0) {
-        //console.log("tim")
-        this.index = 1
-        this.profileInfo = this.foo
+        this.index = 1;
       } else {
-        //console.log("Foo")
-        this.index = 0
-        this.profileInfo = this.timStruggles
+        this.index = 0;
       }
     }
   }

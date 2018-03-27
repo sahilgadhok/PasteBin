@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="container-fluid">
     <h1>FileHub</h1>
-    <account class="text-right"></account>
+    <login class="text-right"></login>
     <ul class="nav nav-pills">
       <router-link tag="li" active-class="active" exact
       v-for="route in routes" v-bind:key="route.path" v-bind:to="route.path">
@@ -14,7 +14,7 @@
 
 <script>
 import routes from './routes.js';
-import Account from './Account.vue';
+import Login from './Login.vue';
 
 export default {
   name: 'App',
@@ -27,7 +27,7 @@ export default {
     };
   },
   components: {
-    'account': Account
+    login: Login
   }
 }
 </script>

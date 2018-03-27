@@ -16,7 +16,7 @@ new Vue({
   el: '#app',
   data: {
     store: {
-      userAccount: null
+      sessionToken: null
     }
   },
   render: function (h) {return h(App);},

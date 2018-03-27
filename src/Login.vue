@@ -1,5 +1,5 @@
 <template>
-  <div v-if="userAccount">
+  <div v-if="sessionToken">
     <router-link exact to="/profile">Profile</router-link>
     <button class="btn btn-default" type="button"
     v-on:click="logout()">Logout</button>
@@ -26,19 +26,16 @@ export default {
       form: {
         username: '',
         password: '',
-      },
-      account: false
+      }
     };
   },
-  store: ['userAccount'],
+  store: ['sessionToken'],
   methods: {
     login: function () {
-      this.userAccount = {
-        username: 'foobar'
-      };
+      this.sessionToken = 'foobar';
     },
     logout: function () {
-      this.userAccount = null;
+      this.sessionToken = null;
     }
   }
 }

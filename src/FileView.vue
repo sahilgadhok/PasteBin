@@ -9,7 +9,7 @@
         <p>{{comment.content}}</p>
       </li>
     </ul>
-    <form v:on-submit.prevent="onSubmit" v-if="userAccount">
+    <form v:on-submit.prevent="onSubmit" v-if="sessionToken">
       <div class="form-group">
         <label for="comment-self">Leave a Comment</label>
         <textarea id="comment-self" class="form-control" rows="5"></textarea>
@@ -37,7 +37,7 @@ export default {
       comments: []
     };
   },
-  store: ['userAccount'],
+  store: ['sessionToken'],
   methods: {
     makeRowKey: function (row) {
       return [row.id, Date.now()].join('-');
