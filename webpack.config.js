@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const extractCSS = new ExtractTextPlugin('[name].css');
 
 module.exports = {
   entry: {
@@ -8,6 +9,7 @@ module.exports = {
       'es6-promise',
       'vue',
       'vue-router',
+      'vue-stash',
       'axios',
       'smart-table-core',
       'smart-table-vue',
@@ -24,7 +26,7 @@ module.exports = {
     rules: [
       {
         test: /\.css$/,
-        use: ExtractTextPlugin.extract({
+        use: extractCSS.extract({
           use: 'css-loader',
           fallback: 'vue-style-loader',
         }),
@@ -52,10 +54,7 @@ module.exports = {
     ]
   },
   plugins: [
-    new ExtractTextPlugin({
-      filename: '[name].css',
-      allChunks: true
-    }),
+    extractCSS,
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
       minChunks: Infinity,

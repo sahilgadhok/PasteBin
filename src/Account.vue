@@ -1,5 +1,5 @@
 <template>
-  <div v-if="account">
+  <div v-if="userAccount">
     <router-link exact to="/profile">Profile</router-link>
     <button class="btn btn-default" type="button"
     v-on:click="logout()">Logout</button>
@@ -30,12 +30,15 @@ export default {
       account: false
     };
   },
+  store: ['userAccount'],
   methods: {
     login: function () {
-      this.account = true;
+      this.userAccount = {
+        username: 'foobar'
+      };
     },
     logout: function () {
-      this.account = false;
+      this.userAccount = null;
     }
   }
 }
