@@ -1,7 +1,9 @@
 <template>
   <div id="app" class="container-fluid">
-    <h1>FileHub</h1>
-    <login class="text-right"></login>
+    <header class="app-header">
+      <h1>FileHub</h1>
+      <login class="pull-right"></login>
+    </header>
     <ul class="nav nav-pills">
       <router-link tag="li" active-class="active" exact
       v-for="route in routes" v-bind:key="route.path" v-bind:to="route.path">
@@ -33,4 +35,11 @@ export default {
 </script>
 
 <style scoped>
+.app-header {
+  margin-top: 20px;
+}
+.app-header > h1 {
+  display: inline-block;
+  margin-top: 0;
+}
 </style>

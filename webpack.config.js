@@ -8,6 +8,7 @@ module.exports = {
     vendor: [
       'es6-promise',
       'vue',
+      'vue-js-modal',
       'vue-router',
       'vue-stash',
       'axios',
