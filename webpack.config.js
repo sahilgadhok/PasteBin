@@ -1,17 +1,22 @@
 const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const extractCSS = new ExtractTextPlugin('[name].css');
 
 module.exports = {
   entry: {
     vendor: [
       'es6-promise',
       'vue',
+      'vue-js-modal',
+      'vue-loading-overlay',
       'vue-router',
+      'vue-stash',
       'axios',
       'smart-table-core',
       'smart-table-vue',
-      'bootstrap/dist/css/bootstrap.css'
+      'bootstrap/dist/css/bootstrap.css',
+      'vue-loading-overlay/dist/vue-loading.min.css'
     ],
     app: './src/main.js',
   },
@@ -24,7 +29,7 @@ module.exports = {
     rules: [
       {
         test: /\.css$/,
-        use: ExtractTextPlugin.extract({
+        use: extractCSS.extract({
           use: 'css-loader',
           fallback: 'vue-style-loader',
         }),
@@ -52,10 +57,7 @@ module.exports = {
     ]
   },
   plugins: [
-    new ExtractTextPlugin({
-      filename: '[name].css',
-      allChunks: true
-    }),
+    extractCSS,
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
       minChunks: Infinity,

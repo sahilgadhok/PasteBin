@@ -1,20 +1,22 @@
 <template>
-  <div class="container">
-    <h2>{{filename}}</h2>
-    <pre>{{content}}</pre>
+  <div class="container" v-if="file.name">
+    <h2>{{file.name}}</h2>
+    <pre>{{file.content}}</pre>
     <h3>Comments</h3>
     <ul class="comments">
-      <li v-for="comment in comments" v-bind:key="makeRowKey(comment)">
+      <li v-for="comment in file.comments" v-bind:key="makeRowKey(comment)">
         <strong>{{comment.user}}</strong>
         <p>{{comment.content}}</p>
       </li>
     </ul>
-    <form v:on-submit.prevent="onSubmit">
+    <form v:on-submit.prevent="onSubmit" v-if="sessionToken">
       <div class="form-group">
         <label for="comment-self">Leave a Comment</label>
-        <textarea id="comment-self" class="form-control" rows="5"></textarea>
+        <textarea id="comment-self" class="form-control" rows="5"
+        v-model="comment"></textarea>
       </div>
-      <button class="btn btn-primary" type="button" disabled>Submit</button>
+      <button class="btn btn-primary" type="button"
+      v-on:click="submitComment()">Submit</button>
     </form>
   </div>
 </template>
@@ -32,40 +34,65 @@ export default {
   },
   data: function () {
     return {
-      filename: '',
-      content: '',
-      comments: []
+      comment: '',
+      file: {
+        name: '',
+        content: '',
+        comments: []
+      }
     };
   },
+  store: ['sessionToken'],
   methods: {
+    submitComment: function () {
+      if (!this.comment) {
+        return;
+      }
+
+      // TODO: submit to server via POST/PUT
+      this.file.comments.push({
+        id: [Date.now(), Date.now()].join('-'),
+        user: 'timStruggle',
+        content: this.comment
+      });
+      this.comment = '';
+    },
+    updateFile: function (hash) {
+      const vm = this;
+
+      // Assume that the hash points to a valid Github Gist
+      axios.get('https://api.github.com/gists/' + hash)
+        // file
+        .then(function (response) {
+          const files = response.data.files;
+          vm.file.name = Object.keys(files)[0];
+          vm.file.content = files[vm.file.name].content;
+          return axios.get(response.data.comments_url);
+        })
+        // comments
+        .then(function (response) {
+          vm.file.comments = response.data.map(row => ({
+            id: row.id,
+            user: row.user.login,
+            content: row.body
+          }));
+        })
+        .catch(function (error) {
+          console.error(error);
+        });
+    },
     makeRowKey: function (row) {
       return [row.id, Date.now()].join('-');
     }
   },
   created: function () {
-    const vm = this;
-
-    // Assume that the hash points to a valid Github Gist
-    axios.get('https://api.github.com/gists/' + this.hash)
-      // file
-      .then(function (response) {
-        const files = response.data.files;
-        vm.filename = Object.keys(files)[0];
-        vm.content = files[vm.filename].content;
-        return axios.get(response.data.comments_url);
-      })
-      // comments
-      .then(function (response) {
-        vm.comments = response.data.map(row => ({
-          id: row.id,
-          user: row.user.login,
-          content: row.body
-        }));
-      })
-      .catch(function (error) {
-        console.error(error);
-      });
+    this.updateFile(this.hash);
   },
+  watch: {
+    hash: function (newVal) {
+      this.updateFile(newVal);
+    }
+  }
 }
 </script>
 

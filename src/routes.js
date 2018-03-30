@@ -15,8 +15,9 @@ export default [
     component: Search,
   },
   {
-    path: '/profile',
+    path: '/profile/:username',
     component: Profile,
+    props: true,
   },
   {
     path: '/file/:hash',
