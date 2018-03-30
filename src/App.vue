@@ -2,7 +2,7 @@
   <div id="app" class="container-fluid">
     <header class="app-header">
       <h1>FileHub</h1>
-      <login class="pull-right"></login>
+      <access class="pull-right"></access>
     </header>
     <loading-overlay></loading-overlay>
     <ul class="nav nav-pills">
@@ -18,7 +18,7 @@
 <script>
 import VueLoadingOverlay from 'vue-loading-overlay';
 import routes from './routes.js';
-import Login from './Login.vue';
+import Access from './Access.vue';
 
 export default {
   name: 'App',
@@ -31,7 +31,7 @@ export default {
     };
   },
   components: {
-    login: Login,
+    access: Access,
     'loading-overlay': VueLoadingOverlay
   }
 }
