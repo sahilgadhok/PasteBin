@@ -6,23 +6,19 @@
     v-on:click="logout()">Logout</button>
   </div>
   <div v-else>
-    <modal name="login" width="400"
-    v-bind:adaptive="true" v-bind:click-to-close="false">
+    <modal name="login" width="300" v-bind:click-to-close="false"
+    v-bind:adaptive="true" v-bind:scrollable="true">
       <div class="container-fluid" style="margin-top:20px">
-        <form class="form-horizontal" v:on-submit.prevent="onSubmit">
+        <form v:on-submit.prevent="onSubmit">
           <div class="form-group">
-            <label class="col-sm-3" for="acct-username">Username</label>
-            <div class="col-sm-9">
-              <input id="acct-username" class="form-control" type="text"
-              v-model="form.username">
-            </div>
+            <label for="acct-username">Username</label>
+            <input id="acct-username" class="form-control" type="text"
+            v-model="form.username">
           </div>
           <div class="form-group">
-            <label class="col-sm-3" for="acct-password">Password</label>
-            <div class="col-sm-9">
-              <input id="acct-password" class="form-control" type="password"
-              v-model="form.password">
-            </div>
+            <label for="acct-password">Password</label>
+            <input id="acct-password" class="form-control" type="password"
+            v-model="form.password">
           </div>
           <div class="pull-right">
             <button class="btn btn-danger" type="button"
