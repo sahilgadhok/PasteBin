@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" v-if="file.name">
     <h2>{{file.name}}</h2>
     <pre>{{file.content}}</pre>
     <h3>Comments</h3>
@@ -12,9 +12,11 @@
     <form v:on-submit.prevent="onSubmit" v-if="sessionToken">
       <div class="form-group">
         <label for="comment-self">Leave a Comment</label>
-        <textarea id="comment-self" class="form-control" rows="5"></textarea>
+        <textarea id="comment-self" class="form-control" rows="5"
+        v-model="comment"></textarea>
       </div>
-      <button class="btn btn-primary" type="button" disabled>Submit</button>
+      <button class="btn btn-primary" type="button"
+      v-on:click="submitComment()">Submit</button>
     </form>
   </div>
 </template>
@@ -32,6 +34,7 @@ export default {
   },
   data: function () {
     return {
+      comment: '',
       file: {
         name: '',
         content: '',
@@ -41,6 +44,19 @@ export default {
   },
   store: ['sessionToken'],
   methods: {
+    submitComment: function () {
+      if (!this.comment) {
+        return;
+      }
+
+      // TODO: submit to server via POST/PUT
+      this.file.comments.push({
+        id: [Date.now(), Date.now()].join('-'),
+        user: 'timStruggle',
+        content: this.comment
+      });
+      this.comment = '';
+    },
     updateFile: function (hash) {
       const vm = this;
 
