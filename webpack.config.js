@@ -9,12 +9,14 @@ module.exports = {
       'es6-promise',
       'vue',
       'vue-js-modal',
+      'vue-loading-overlay',
       'vue-router',
       'vue-stash',
       'axios',
       'smart-table-core',
       'smart-table-vue',
-      'bootstrap/dist/css/bootstrap.css'
+      'bootstrap/dist/css/bootstrap.css',
+      'vue-loading-overlay/dist/vue-loading.min.css'
     ],
     app: './src/main.js',
   },

@@ -4,6 +4,7 @@
       <h1>FileHub</h1>
       <login class="pull-right"></login>
     </header>
+    <loading-overlay></loading-overlay>
     <ul class="nav nav-pills">
       <router-link tag="li" active-class="active" exact
       v-for="route in routes" v-bind:key="route.path" v-bind:to="route.path">
@@ -15,6 +16,7 @@
 </template>
 
 <script>
+import VueLoadingOverlay from 'vue-loading-overlay';
 import routes from './routes.js';
 import Login from './Login.vue';
 
@@ -29,7 +31,8 @@ export default {
     };
   },
   components: {
-    login: Login
+    login: Login,
+    'loading-overlay': VueLoadingOverlay
   }
 }
 </script>
