@@ -5,8 +5,7 @@
     <col class="col-xs-4">
     <thead>
       <tr>
-        <th v-for="(prop, index) in table.props" v-bind:key="index"
-        v-bind:smart-table="smartTable">
+        <th v-for="(prop, index) in table.props" v-bind:key="index">
           <span>{{table.headers[prop]}}</span>
         </th>
       </tr>
@@ -22,6 +21,7 @@
         <td v-for="(prop, index) in table.props" v-bind:key="index">
           <a target="_blank" v-if="prop === 'url'"
           v-bind:href="row.value[prop]">Link</a>
+          <span v-else-if="prop === 'datetime'">{{prettifyDate(row.value[prop])}}</span>
           <span v-else>{{row.value[prop]}}</span>
         </td>
       </tr>
@@ -43,6 +43,7 @@
 import SmartTableVue from 'smart-table-vue';
 import StColFilter from './StColFilter.vue';
 import StPaginate from './StPaginate.vue';
+import moment from 'moment';
 
 export default {
   name: 'SearchSmartTable',
@@ -59,7 +60,7 @@ export default {
         // Table Header
         headers: {
           filename: 'Filename',
-          datetime: 'DateTime',
+          datetime: 'Datetime (UTC)',
           url: 'Url',
         },
       }
@@ -70,6 +71,16 @@ export default {
     // Return a unique key for the given row.
     makeRowKey: function (row) {
       return [row.value.id, row.value.filename, Date.now()].join('-');
+    },
+    prettifyDate: function (date) {
+      if (!date) {
+        return '';
+      }
+      const utcDate = moment.utc(date);
+      if (!utcDate) {
+        return '';
+      }
+      return utcDate ? utcDate.format('MM-DD-YYYY HH:mm:ss') : '';
     }
   }
 };

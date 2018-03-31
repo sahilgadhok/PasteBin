@@ -13,6 +13,7 @@ module.exports = {
       'vue-router',
       'vue-stash',
       'axios',
+      'moment',
       'smart-table-core',
       'smart-table-vue',
       'bootstrap/dist/css/bootstrap.css',

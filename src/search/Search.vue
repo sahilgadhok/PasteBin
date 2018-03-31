@@ -67,7 +67,6 @@ export default {
               });
             }))
             .then(function (newData) {
-              console.log(newData);
               vm.table.refresh(newData);
             });
           return p;
