@@ -1,11 +1,23 @@
 const express = require('express');
-const db = require('./queries');
+const pgp = require('pg-promise');
 const app = express();
+var connectionString = 'postgres://filehub_admin:password@filehub.cekghi6bfi1x.us-east-2.rds.amazonaws.com:5432/filehub';
+var db = pgp(connectionString);
 
 app.use('/', express.static(__dirname + '/'));
 
-app.post("/signup", (req, res, next) => {
-  db.createUser(req, res, next);  
+app.post("/signup", (req, res) => {
+  const p = db.none('insert into users(id, username, password)' +
+      'values(DEFAULT, ${username}, ${password})',
+    req.body)
+    .then(function () {
+      res.status(200)
+        .json({
+          status: 'Success',
+          message: 'Inserted one user'
+        });
+    });
+    return p;
 });
 
 app.listen(3000);

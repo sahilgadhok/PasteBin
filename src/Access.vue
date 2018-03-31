@@ -32,7 +32,7 @@
     <modal name="signUp" width="300" v-bind:click-to-close="false"
     v-bind:adaptive="true" v-bind:scrollable="true">
       <div class="container-fluid" style="margin-top:20px">
-        <form action-"/signup" v:on-submit.prevent="onSubmit">
+        <form id="signUpForm" v:on-submit.prevent="onSubmit">
           <div class="form-group">
             <label for="acct-username">Username</label>
             <input id="acct-username" class="form-control" type="text"
@@ -104,6 +104,15 @@ export default {
     },
     signUp: function () {
       this.closeSignUpModal();
+      var data = $("#signUpForm").serialize();
+      $.ajax({
+        type: "POST",
+        url: "/signup",
+        data: data,
+        success: function() {
+          console.log("Signing up user");
+        }
+      });
     }
   }
 }
