@@ -54,7 +54,7 @@
     </modal>
     <button class="btn btn-default" type="button"
     v-on:click="openSignInModal()">Sign In</button>
-    <button class="btn btn-default" type="button" disabled
+    <button class="btn btn-default" type="button" 
     v-on:click="openSignUpModal()">Sign Up</button>
   </div>
 </template>
@@ -104,11 +104,10 @@ export default {
     },
     signUp: function () {
       this.closeSignUpModal();
-      var data = $("#signUpForm").serialize();
       $.ajax({
         type: "POST",
         url: "/signup",
-        data: data,
+        data: $("#signUpForm").serialize(),
         success: function() {
           console.log("Signing up user");
         }
