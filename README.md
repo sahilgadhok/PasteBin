@@ -8,8 +8,8 @@
 
 ## Usage
 
-Clone the repo and open index.html in the browser with Javascript enabled.
-The repo includes all runtime dependencies required for index.html to display a Single-Page Application (SPA).
+Clone the repo and open public/index.html in the browser with Javascript enabled.
+The repo includes all runtime dependencies required for public/index.html to display a Single-Page Application (SPA).
 
 ## Compile from Source
 
@@ -24,12 +24,11 @@ npm run build
     - [Bootstrap][bootstrap-3]
 - Javascript
     - AJAX ([axios][github-axios])
-    - Polyfill ([es6-promise][github-es6-promise])
-    - UI ([vue][github-vue], [vue-router][github-vue-router])
+    - UI ([vue][github-vue])
 
 ## Browser Support
 
-- IE 9+
+- Internet Explorer 10+
 - Firefox ESR
 - Chrome 56+
 
