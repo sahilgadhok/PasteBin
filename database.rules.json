@@ -11,6 +11,14 @@
       "$fid": {
         ".write": "!data.exists() && root.child('file').child($fid).exists()"
       }
+    },
+    "comment": {
+      "$fid": {
+        ".read": true,
+        "$id": {
+          ".write": true
+        }
+      }
     }
   }
 }

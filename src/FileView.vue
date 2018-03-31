@@ -67,7 +67,8 @@ export default {
       }
 
       const vm = this;
-      firebase.database().ref('/file/' + hash).once('value')
+      const db = firebase.database();
+      db.ref('/file/' + hash).once('value')
         .then(function (snapshot) {
           const file = snapshot.val();
           if (!file) {
@@ -76,15 +77,20 @@ export default {
 
           vm.file.name = file.name;
           vm.file.content = file.content;
+          return db.ref('/comment/' + hash).once('value');
         })
         // comments
-        // .then(function (response) {
-        //   vm.file.comments = response.data.map(row => ({
-        //     id: row.id,
-        //     user: row.user.login,
-        //     content: row.body
-        //   }));
-        // })
+        .then(function (snapshot) {
+          const comments = snapshot.val();
+          if (!comments) {
+            return;
+          }
+          vm.file.comments = Object.keys(comments).map(key => ({
+            id: key,
+            user: comments[key].user,
+            content: comments[key].content
+          }));
+        })
         .catch(function (error) {
           console.error(error);
         });
