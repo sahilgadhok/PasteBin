@@ -28,18 +28,9 @@
 <script>
 import axios from 'axios';
 
-// Create a new (Github) gist with the given file
-// Return a promise of the POST request
-function createFile(file) {
-  const files = {};
-  files[file.filename] = {content: file.content};
-  const promise = axios.post('https://api.github.com/gists', {
-    files: files,
-    description: '',
-    public: true
-  });
-  return promise;
-}
+const firebase = (typeof window === 'object' &&
+                  typeof window.firebase === 'object') ?
+                  window.firebase : null;
 
 export default {
   name: 'Home',
@@ -71,18 +62,19 @@ export default {
       vm.error = '';
 
       function send(filename, content) {
+          if (!firebase) {
+            vm.error = 'Failed to create the file';
+            return;
+          }
+
           vm.newFile.show = false;
-          createFile({
-              filename: filename,
-              content: content
-            })
-            .then(function (response) {
-              vm.newFile.url = '#/file/' + response.data.id;
-              vm.newFile.show = true;
-            })
-            .catch(function () {
-              vm.error = 'Failed to create the file';
-            });
+          const newFileEntry = firebase.database().ref('/file').push();
+          newFileEntry.set({
+            name: filename,
+            content: content
+          });
+          vm.newFile.url = '#/file/' + newFileEntry.key;
+          vm.newFile.show = true;
       }
 
       if (vm.file) {

@@ -24,6 +24,10 @@
 <script>
 import axios from 'axios';
 
+const firebase = (typeof window === 'object' &&
+                  typeof window.firebase === 'object') ?
+                  window.firebase : null;
+
 export default {
   name: 'FileView',
   props: {
@@ -58,25 +62,29 @@ export default {
       this.comment = '';
     },
     updateFile: function (hash) {
-      const vm = this;
+      if (!hash || !firebase) {
+        return;
+      }
 
-      // Assume that the hash points to a valid Github Gist
-      axios.get('https://api.github.com/gists/' + hash)
-        // file
-        .then(function (response) {
-          const files = response.data.files;
-          vm.file.name = Object.keys(files)[0];
-          vm.file.content = files[vm.file.name].content;
-          return axios.get(response.data.comments_url);
+      const vm = this;
+      firebase.database().ref('/file/' + hash).once('value')
+        .then(function (snapshot) {
+          const file = snapshot.val();
+          if (!file) {
+            return;
+          }
+
+          vm.file.name = file.name;
+          vm.file.content = file.content;
         })
         // comments
-        .then(function (response) {
-          vm.file.comments = response.data.map(row => ({
-            id: row.id,
-            user: row.user.login,
-            content: row.body
-          }));
-        })
+        // .then(function (response) {
+        //   vm.file.comments = response.data.map(row => ({
+        //     id: row.id,
+        //     user: row.user.login,
+        //     content: row.body
+        //   }));
+        // })
         .catch(function (error) {
           console.error(error);
         });
