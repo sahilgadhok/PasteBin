@@ -16,7 +16,7 @@
       "$fid": {
         ".read": true,
         "$id": {
-          ".write": true
+          ".write": "!data.exists()"
         }
       }
     }
