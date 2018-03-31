@@ -16,6 +16,10 @@ import axios from 'axios';
 import SmartTable from 'smart-table-core';
 import SearchSmartTable from './SearchSmartTable.vue';
 
+const firebase = (typeof window === 'object' &&
+                  typeof window.firebase === 'object') ?
+                  window.firebase : null;
+
 export default {
   name: 'Search',
   components: {
@@ -29,7 +33,8 @@ export default {
         stTable.tableState.slice.size = 10;
         return {
           refresh: function (newData) {
-            stTable.data.splice();
+            // stTable.data.splice();
+            stTable.data.length = 0;
             newData.forEach(function (row) {
               this.push(row);
             }, stTable.data);
@@ -41,24 +46,31 @@ export default {
   },
   methods: {
     searchFiles: function () {
+      if (!firebase) {
+        return;
+      }
+
       const vm = this;
-      // Get public files only
-      // TODO - Allow user to search their private files
-      axios.get('https://api.github.com/gists/public?per_page=100')
-        .then(function (response) {
-          const arr = response.data;
-          const newData = arr.map(function (row) {
-            const file = row.files[Object.keys(row.files)[0]];
-            return {
-              id: row.id,
-              filename: file.filename,
-              user: (row.owner && typeof row.owner === 'object' &&
-                     typeof row.owner.login === 'string') ? row.owner.login : '',
-              datetime: row.created_at,
-              url: '#/file/' + row.id
-            };
-          });
-          vm.table.refresh(newData);
+      const db = firebase.database();
+      db.ref('/public_files').once('value')
+        .then(function (snapshot) {
+          const fids = Object.keys(snapshot.val());
+          const p = Promise.all(fids.map(function (fid) {
+              return db.ref('/file/' + fid).once('value').then(function (snapshot) {
+                const file = snapshot.val();
+                return {
+                  id: fid,
+                  filename: file.name,
+                  datetime: file.created,
+                  url: '#/file/' + fid
+                };
+              });
+            }))
+            .then(function (newData) {
+              console.log(newData);
+              vm.table.refresh(newData);
+            });
+          return p;
         })
         .catch(function (error) {
           console.error(error);

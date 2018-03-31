@@ -19,7 +19,7 @@
       <div class="form-group">
         <button class="btn btn-danger" type="reset">Reset</button>
         <button class="btn btn-primary" type="button"
-        v-on:click="submitFile()">Submit</button>
+        v-on:click="submitFile()" v-bind:disabled="inputDisabled">Submit</button>
       </div>
     </form>
   </div>
@@ -36,6 +36,7 @@ export default {
   name: 'Home',
   data: function () {
     return {
+      inputDisabled: false,
       error: '',
       newFile: {
         url: '',
@@ -59,22 +60,29 @@ export default {
         vm.error = 'No file or invalid paste';
         return;
       }
+      vm.inputDisabled = true;
       vm.error = '';
 
       function send(filename, content) {
           if (!firebase) {
             vm.error = 'Failed to create the file';
+            vm.inputDisabled = false;
             return;
           }
 
           vm.newFile.show = false;
-          const newFileEntry = firebase.database().ref('/file').push();
+          const db = firebase.database();
+          // TODO: What if the file object doesn't exist?
+          const newFileEntry = db.ref('/file').push();
           newFileEntry.set({
             name: filename,
-            content: content
+            content: content,
+            created: (new Date()).toISOString()
           });
+          db.ref('/public_files/' + newFileEntry.key).set(1);
           vm.newFile.url = '#/file/' + newFileEntry.key;
           vm.newFile.show = true;
+          vm.inputDisabled = false;
       }
 
       if (vm.file) {
@@ -83,6 +91,7 @@ export default {
         reader.onload = function (event) {
           if (!event.target.result) {
             vm.error = 'File is empty';
+            vm.inputDisabled = true;
             return;
           }
 

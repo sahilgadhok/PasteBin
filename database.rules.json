@@ -1,8 +1,16 @@
 {
   "rules": {
     "file": {
-      ".read": "!data.child('uid').exists() || (auth != null && data.child('uid').val() == auth.uid)",
-      ".write": "!newData.child('uid').exists() || (auth != null && newData.child('uid').val() == auth.uid)"
+      "$id": {
+        ".read": "!data.child('uid').exists() || (auth != null && data.child('uid').val() == auth.uid)",
+        ".write": "!data.exists() && (!newData.child('uid').exists() || (auth != null && newData.child('uid').val() == auth.uid))"
+      }
+    },
+    "public_files": {
+      ".read": true,
+      "$fid": {
+        ".write": "!data.exists() && root.child('file').child($fid).exists()"
+      }
     }
   }
 }

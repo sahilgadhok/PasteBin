@@ -1,9 +1,8 @@
 <template>
   <table class="table table-striped">
     <col class="col-xs-4">
-    <col class="col-xs-3">
-    <col class="col-xs-3">
-    <col class="col-xs-2">
+    <col class="col-xs-4">
+    <col class="col-xs-4">
     <thead>
       <tr>
         <th v-for="(prop, index) in table.props" v-bind:key="index"
@@ -14,10 +13,6 @@
       <tr>
         <th>
           <st-col-filter v-bind:smart-table="smartTable" st-filter="filename">
-          </st-col-filter>
-        </th>
-        <th>
-          <st-col-filter v-bind:smart-table="smartTable" st-filter="user">
           </st-col-filter>
         </th>
       </tr>
@@ -60,11 +55,10 @@ export default {
     return {
       table: {
         // Table Column Order
-        props: ['filename', 'user', 'datetime', 'url'],
+        props: ['filename', 'datetime', 'url'],
         // Table Header
         headers: {
           filename: 'Filename',
-          user: 'User',
           datetime: 'DateTime',
           url: 'Url',
         },
