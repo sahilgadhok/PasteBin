@@ -32,7 +32,6 @@ export default {
         stTable.tableState.slice.size = 10;
         return {
           refresh: function (newData) {
-            // stTable.data.splice();
             stTable.data.length = 0;
             newData.forEach(function (row) {
               this.push(row);

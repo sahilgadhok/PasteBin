@@ -48,28 +48,29 @@ export default {
   store: ['sessionToken'],
   methods: {
     updateComments: function (hash) {
-        if (!hash || !firebase) {
-          return;
-        }
+      if (!hash || !firebase) {
+        return;
+      }
 
-        const vm = this;
-        const db = firebase.database();
-        db.ref('/comment/' + hash).orderByChild('created').once('value')
-          .then(function (snapshot) {
-            const comments = snapshot.val();
-            if (!comments) {
-              return;
-            }
-            vm.file.comments = Object.keys(comments).map(key => ({
-              id: key,
-              user: comments[key].user,
-              content: comments[key].content,
-              created: comments[key].created,
-            }))
-          })
-          .catch(function (error) {
-            console.error(error);
-          });
+      const vm = this;
+      const db = firebase.database();
+      db.ref('/comment/' + hash).orderByChild('created').once('value')
+        .then(function (snapshot) {
+          const comments = snapshot.val();
+          if (!comments) {
+            return;
+          }
+
+          vm.file.comments = Object.keys(comments).map(key => ({
+            id: key,
+            user: comments[key].user,
+            content: comments[key].content,
+            created: comments[key].created,
+          }));
+        })
+        .catch(function (error) {
+          console.error(error);
+        });
     },
     updateFile: function (hash) {
       if (!hash || !firebase) {

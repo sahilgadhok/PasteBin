@@ -89,7 +89,7 @@ export default {
         reader.onload = function (event) {
           if (!event.target.result) {
             vm.error = 'File is empty';
-            vm.inputDisabled = true;
+            vm.inputDisabled = false;
             return;
           }
 
