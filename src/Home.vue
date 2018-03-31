@@ -26,8 +26,6 @@
 </template>
 
 <script>
-import axios from 'axios';
-
 const firebase = (typeof window === 'object' &&
                   typeof window.firebase === 'object') ?
                   window.firebase : null;

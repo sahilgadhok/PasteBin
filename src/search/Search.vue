@@ -12,7 +12,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import SmartTable from 'smart-table-core';
 import SearchSmartTable from './SearchSmartTable.vue';
 
