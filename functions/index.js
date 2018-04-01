@@ -125,7 +125,7 @@ app.post('/signout', function (req, res) {
     });
 });
 app.put('/user/:username/', function (req, res) {
-  if (!req.body.username || !req.body.useremail) {
+  if (!req.params.username || !req.body.useremail) {
     res.status(400).send({
         message: 'Missing username/useremail'
     });
@@ -145,7 +145,7 @@ app.put('/user/:username/', function (req, res) {
       }
 
       console.log(users);
-      const matches = Object.keys(users).filter((key) => (users[key].token === req.body.token));
+      const matches = Object.keys(users).filter((key) => (users[username].token === req.body.token));
       console.log(matches);
       if (matches.length === 0) {
         return Promise.reject(err);
@@ -162,7 +162,7 @@ app.put('/user/:username/', function (req, res) {
       if (!snapshot || !snapshot.val()) {
         return Promise.reject(new Error('user doesn\'t exist'));
       }
-      const newEmail = db.ref('/email/' + req.params.email).push();
+      const newEmail = db.ref('/email/' + req.body.email).push();
       return newEmail.set({
         user: username,
         email: req.body.email
