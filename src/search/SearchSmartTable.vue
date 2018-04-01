@@ -1,23 +1,17 @@
 <template>
   <table class="table table-striped">
     <col class="col-xs-4">
-    <col class="col-xs-3">
-    <col class="col-xs-3">
-    <col class="col-xs-2">
+    <col class="col-xs-4">
+    <col class="col-xs-4">
     <thead>
       <tr>
-        <th v-for="(prop, index) in table.props" v-bind:key="index"
-        v-bind:smart-table="smartTable">
+        <th v-for="(prop, index) in table.props" v-bind:key="index">
           <span>{{table.headers[prop]}}</span>
         </th>
       </tr>
       <tr>
         <th>
           <st-col-filter v-bind:smart-table="smartTable" st-filter="filename">
-          </st-col-filter>
-        </th>
-        <th>
-          <st-col-filter v-bind:smart-table="smartTable" st-filter="user">
           </st-col-filter>
         </th>
       </tr>
@@ -27,6 +21,7 @@
         <td v-for="(prop, index) in table.props" v-bind:key="index">
           <a target="_blank" v-if="prop === 'url'"
           v-bind:href="row.value[prop]">Link</a>
+          <span v-else-if="prop === 'datetime'">{{prettifyDate(row.value[prop])}}</span>
           <span v-else>{{row.value[prop]}}</span>
         </td>
       </tr>
@@ -48,6 +43,7 @@
 import SmartTableVue from 'smart-table-vue';
 import StColFilter from './StColFilter.vue';
 import StPaginate from './StPaginate.vue';
+import moment from 'moment';
 
 export default {
   name: 'SearchSmartTable',
@@ -60,12 +56,11 @@ export default {
     return {
       table: {
         // Table Column Order
-        props: ['filename', 'user', 'datetime', 'url'],
+        props: ['filename', 'datetime', 'url'],
         // Table Header
         headers: {
           filename: 'Filename',
-          user: 'User',
-          datetime: 'DateTime',
+          datetime: 'Datetime (UTC)',
           url: 'Url',
         },
       }
@@ -76,6 +71,16 @@ export default {
     // Return a unique key for the given row.
     makeRowKey: function (row) {
       return [row.value.id, row.value.filename, Date.now()].join('-');
+    },
+    prettifyDate: function (date) {
+      if (!date) {
+        return '';
+      }
+      const utcDate = moment.utc(date);
+      if (!utcDate) {
+        return '';
+      }
+      return utcDate ? utcDate.format('MM-DD-YYYY HH:mm:ss') : '';
     }
   }
 };

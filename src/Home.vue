@@ -19,32 +19,22 @@
       <div class="form-group">
         <button class="btn btn-danger" type="reset">Reset</button>
         <button class="btn btn-primary" type="button"
-        v-on:click="submitFile()">Submit</button>
+        v-on:click="submitFile()" v-bind:disabled="inputDisabled">Submit</button>
       </div>
     </form>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
-
-// Create a new (Github) gist with the given file
-// Return a promise of the POST request
-function createFile(file) {
-  const files = {};
-  files[file.filename] = {content: file.content};
-  const promise = axios.post('https://api.github.com/gists', {
-    files: files,
-    description: '',
-    public: true
-  });
-  return promise;
-}
+const firebase = (typeof window === 'object' &&
+                  typeof window.firebase === 'object') ?
+                  window.firebase : null;
 
 export default {
   name: 'Home',
   data: function () {
     return {
+      inputDisabled: false,
       error: '',
       newFile: {
         url: '',
@@ -68,21 +58,29 @@ export default {
         vm.error = 'No file or invalid paste';
         return;
       }
+      vm.inputDisabled = true;
       vm.error = '';
 
       function send(filename, content) {
+          if (!firebase) {
+            vm.error = 'Failed to create the file';
+            vm.inputDisabled = false;
+            return;
+          }
+
           vm.newFile.show = false;
-          createFile({
-              filename: filename,
-              content: content
-            })
-            .then(function (response) {
-              vm.newFile.url = '#/file/' + response.data.id;
-              vm.newFile.show = true;
-            })
-            .catch(function () {
-              vm.error = 'Failed to create the file';
-            });
+          const db = firebase.database();
+          // TODO: What if the file object doesn't exist?
+          const newFileEntry = db.ref('/file').push();
+          newFileEntry.set({
+            name: filename,
+            content: content,
+            created: (new Date()).toISOString()
+          });
+          db.ref('/public_files/' + newFileEntry.key).set(1);
+          vm.newFile.url = '#/file/' + newFileEntry.key;
+          vm.newFile.show = true;
+          vm.inputDisabled = false;
       }
 
       if (vm.file) {
@@ -91,6 +89,7 @@ export default {
         reader.onload = function (event) {
           if (!event.target.result) {
             vm.error = 'File is empty';
+            vm.inputDisabled = false;
             return;
           }
 

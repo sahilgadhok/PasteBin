@@ -9,7 +9,7 @@
         <p>{{comment.content}}</p>
       </li>
     </ul>
-    <form v:on-submit.prevent="onSubmit" v-if="sessionToken">
+    <form v:on-submit.prevent="onSubmit" v-if="inputEnabled">
       <div class="form-group">
         <label for="comment-self">Leave a Comment</label>
         <textarea id="comment-self" class="form-control" rows="5"
@@ -22,7 +22,9 @@
 </template>
 
 <script>
-import axios from 'axios';
+const firebase = (typeof window === 'object' &&
+                  typeof window.firebase === 'object') ?
+                  window.firebase : null;
 
 export default {
   name: 'FileView',
@@ -34,6 +36,7 @@ export default {
   },
   data: function () {
     return {
+      inputEnabled: !!firebase,
       comment: '',
       file: {
         name: '',
@@ -44,42 +47,67 @@ export default {
   },
   store: ['sessionToken'],
   methods: {
-    submitComment: function () {
-      if (!this.comment) {
+    updateComments: function (hash) {
+      if (!hash || !firebase) {
         return;
       }
 
-      // TODO: submit to server via POST/PUT
-      this.file.comments.push({
-        id: [Date.now(), Date.now()].join('-'),
-        user: 'timStruggle',
-        content: this.comment
-      });
-      this.comment = '';
-    },
-    updateFile: function (hash) {
       const vm = this;
+      const db = firebase.database();
+      db.ref('/comment/' + hash).orderByChild('created').once('value')
+        .then(function (snapshot) {
+          const comments = snapshot.val();
+          if (!comments) {
+            return;
+          }
 
-      // Assume that the hash points to a valid Github Gist
-      axios.get('https://api.github.com/gists/' + hash)
-        // file
-        .then(function (response) {
-          const files = response.data.files;
-          vm.file.name = Object.keys(files)[0];
-          vm.file.content = files[vm.file.name].content;
-          return axios.get(response.data.comments_url);
-        })
-        // comments
-        .then(function (response) {
-          vm.file.comments = response.data.map(row => ({
-            id: row.id,
-            user: row.user.login,
-            content: row.body
+          vm.file.comments = Object.keys(comments).map(key => ({
+            id: key,
+            user: comments[key].user,
+            content: comments[key].content,
+            created: comments[key].created,
           }));
         })
         .catch(function (error) {
           console.error(error);
         });
+    },
+    updateFile: function (hash) {
+      if (!hash || !firebase) {
+        return;
+      }
+
+      const vm = this;
+      const db = firebase.database();
+      db.ref('/file/' + hash).once('value')
+        .then(function (snapshot) {
+          const file = snapshot.val();
+          if (!file) {
+            return;
+          }
+
+          vm.file.name = file.name;
+          vm.file.content = file.content;
+          vm.updateComments(hash);
+        })
+        .catch(function (error) {
+          console.error(error);
+        });
+    },
+    submitComment: function () {
+      if (!this.comment || !firebase) {
+        return;
+      }
+
+      const db = firebase.database();
+      const newComment = db.ref('/comment/' + this.hash).push();
+      newComment.set({
+        user: 'timStruggle',
+        content: this.comment,
+        created: (new Date()).toISOString()
+      })
+      this.updateComments(this.hash);
+      this.comment = '';
     },
     makeRowKey: function (row) {
       return [row.id, Date.now()].join('-');
