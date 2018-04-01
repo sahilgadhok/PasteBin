@@ -23,10 +23,12 @@
             </div>
             <div class="form-group">
               <label for="friends">Friends</label>
-              <h4 v-for="friend in profileInfo.friends" v-bind:key="friend.name">
-                <router-link exact v-bind:to="'/profile/' + friend.username"
-                >{{friend.username}}</router-link>
-              </h4>
+              <div v-if="profileInfo.friends">
+                <h4 v-for="friend in profileInfo.friends" v-bind:key="friend.name">
+                  <router-link exact v-bind:to="'/profile/' + friend.username"
+                  >{{friend.username}}</router-link>
+                </h4>
+              </div>
             </div>
           </div>
         </div>
@@ -37,8 +39,8 @@
           <div class="panel-heading">
             <h5>Uploads</h5>
           </div>
-          <div class="panel-body" v-if="sessionToken && profileInfo.pastes">
-            <h4 v-for="paste in profileInfo.pastes" v-bind:key="paste.name">
+          <div class="panel-body" v-if="sessionToken && profileInfo.files">
+            <h4 v-for="paste in profileInfo.files" v-bind:key="paste.name">
               <router-link exact v-bind:to="paste.url">{{paste.name}}</router-link>
             </h4>
           </div>
@@ -52,41 +54,45 @@
 </template>
 
 <script>
+import axios from 'axios';
+
+const cloudUrl = 'https://us-central1-filehub-f9a91.cloudfunctions.net/api';
+
 // TODO: move to database
-const profiles = [
-  {
-    name: 'Tim Struggles',
-    email: 'timstruggles@mail.com',
-    username: 'TheStruggle',
-    pastes: [
-      {
-        name: 'gistfile1.txt',
-        url: '/file/a828a18c9ea19b9f84b2cc0c640a870d'
-      }
-    ],
-    friends: [
-      {username: 'Foo'}
-    ]
-  },
-  {
-    name: 'Foo',
-    email: 'foo@mail.com',
-    username: 'Foo',
-    friends: [
-      {username: 'TheStruggle'}
-    ]
-  }
-];
+// const profiles = [
+//   {
+//     name: 'Tim Struggles',
+//     email: 'timstruggles@mail.com',
+//     username: 'TheStruggle',
+//     pastes: [
+//       {
+//         name: 'gistfile1.txt',
+//         url: '/file/a828a18c9ea19b9f84b2cc0c640a870d'
+//       }
+//     ],
+//     friends: [
+//       {username: 'Foo'}
+//     ]
+//   },
+//   {
+//     name: 'Foo',
+//     email: 'foo@mail.com',
+//     username: 'Foo',
+//     friends: [
+//       {username: 'TheStruggle'}
+//     ]
+//   }
+// ];
 // TODO: move to host server
-function getProfile(username) {
-  if (!username) {
-    return null;
-  }
-  const matches = profiles.filter(function (row) {
-    return row.username === this.toString();
-  }, username);
-  return matches.length > 0 ? matches[0] : null;
-}
+// function getProfile(username) {
+//   if (!username) {
+//     return null;
+//   }
+//   const matches = profiles.filter(function (row) {
+//     return row.username === this.toString();
+//   }, username);
+//   return matches.length > 0 ? matches[0] : null;
+// }
 
 export default {
   name: 'Profile',
@@ -96,15 +102,39 @@ export default {
       required: true,
     }
   },
-  store: ['sessionToken'],
-  computed: {
-    profileInfo: function () {
-      return getProfile(this.username);
-    },
-    me: function () {
-      return this.username === 'TheStruggle';
+  data: function () {
+    return {
+      profileInfo: null
     }
   },
+  store: ['sessionToken'],
+  computed: {
+    me: function () {
+      return true;
+    }
+  },
+  methods: {
+    updateProfile: function (username) {
+      const vm = this;
+      axios.post([cloudUrl, 'profile', username].join('/'), {
+          token: this.sessionToken
+        })
+        .then(function (response) {
+          vm.profileInfo = response.data;
+        })
+        .catch(function (error) {
+          console.error(error);
+        })
+    }
+  },
+  created: function () {
+    this.updateProfile(this.username);
+  },
+  watch: {
+    username: function (newVal) {
+      this.updateProfile(newVal);
+    }
+  }
 }
 </script>
 

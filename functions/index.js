@@ -24,8 +24,7 @@ app.post('/signup', function (req, res) {
   }
 
   const db = admin.database();
-  db.ref('/user/' + req.body.username)
-    .once('value')
+  db.ref('/user/' + req.body.username).once('value')
     .then(function (snapshot) {
       if (snapshot && snapshot.val()) {
         return Promise.reject(new Error('username is taken'));
@@ -121,6 +120,40 @@ app.post('/signout', function (req, res) {
     .catch(function () {
       res.status(400).send({
           message: 'Invalid username/token'
+      });
+    });
+});
+
+// Return profile info
+app.post('/profile/:username', function (req, res) {
+  if (!req.params.username || !req.body.token) {
+    res.status(400).send({
+      message: 'Missing username/token'
+    });
+    return;
+  }
+
+  const db = admin.database();
+  db.ref('/user/' + req.params.username).once('value')
+    .then(function (snapshot) {
+      const err = new Error('Invalid username/token');
+      if (!snapshot) {
+        return Promise.reject(err);
+      }
+      const user = snapshot.val();
+      if (!user || user.token !== req.body.token) {
+        return Promise.reject(err);
+      }
+
+      // echo back the username for now
+      res.status(200).send({
+        username: req.params.username,
+      });
+      return true;
+    })
+    .catch(function (error) {
+      res.status(403).send({
+        message: 'Invalid username/token'
       });
     });
 });

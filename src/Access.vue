@@ -61,10 +61,6 @@
 
 <script>
 import axios from 'axios';
-
-const firebase = (typeof window === 'object' &&
-                  typeof window.firebase === 'object') ?
-                  window.firebase : null;
 const cloudUrl = 'https://us-central1-filehub-f9a91.cloudfunctions.net/api';
 
 export default {
@@ -94,8 +90,7 @@ export default {
       this.signInForm.password = '';
     },
     signIn: function () {
-      if (!firebase ||
-          !this.signInForm.username ||
+      if (!this.signInForm.username ||
           !this.signInForm.password) {
         return;
       }
