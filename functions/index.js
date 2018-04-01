@@ -124,7 +124,7 @@ app.post('/signout', function (req, res) {
       });
     });
 });
-app.put('/signup', function (req, res) {
+app.put('/user/:username/', function (req, res) {
   if (!req.body.username || !req.body.useremail) {
     res.status(400).send({
         message: 'Missing username/useremail'
