@@ -1,6 +1,10 @@
-const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-admin.initializeApp(functions.config().firebase);
+const functions = require('firebase-functions');
+const config = functions.config().firebase;
+const cert = require('./filehub-f9a91-firebase-adminsdk-i3j2q-d3432e7ad7.json');
+config.credential = admin.credential.cert(cert);
+admin.initializeApp(config);
+
 const argon2 = require('@phc/argon2');
 
 // Add new user to the database
@@ -51,8 +55,10 @@ exports.auth = functions.https.onRequest(function (req, res) {
       return argon2.verify(user.password, req.body.password);
     })
     .then(function () {
-      // TODO: Send a session token or cookie
-      res.status(200).send('User is validated');
+      return admin.auth().createCustomToken(req.body.username);
+    })
+    .then(function (token) {
+      res.status(200).send(token);
       return true;
     })
     .catch(function (error) {
