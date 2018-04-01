@@ -124,5 +124,63 @@ app.post('/signout', function (req, res) {
       });
     });
 });
+app.put('/signup', function (req, res) {
+  if (!req.body.username || !req.body.useremail) {
+    res.status(400).send({
+        message: 'Missing username/useremail'
+    });
+    return;
+  }
+  // Find the user based on given token
+  let username;
+  db.ref('/user/' + req.params.username).once('value')
+    .then(function (snapshot) {
+      const err = new Error('Invalid token');
+      if (!snapshot) {
+        return Promise.reject(err);
+      }
+      const users = snapshot.val();
+      if (!users) {
+        return Promise.reject(err);
+      }
+
+      console.log(users);
+      const matches = Object.keys(users).filter((key) => (users[key].token === req.body.token));
+      console.log(matches);
+      if (matches.length === 0) {
+        return Promise.reject(err);
+      }
+      username = matches[0];
+      return Promise.resolve(matches[0]);
+    })
+    // userprofile
+    .then (function (username) {
+      return db.ref('/user/' + req.params.username).once('value');
+    })
+    // change the email
+    .then (function (snapshot) {
+      if (!snapshot || !snapshot.val()) {
+        return Promise.reject(new Error('user doesn\'t exist'));
+      }
+      const newEmail = db.ref('/email/' + req.params.email).push();
+      return newEmail.set({
+        user: username,
+        email: req.body.email
+      });
+    })
+    .then(function () {
+      res.status(200).send({
+        message: 'email changed'
+      });
+      return true;
+    })
+    .catch(function (error) {
+      res.status(403).send({
+        message: (typeof error === 'object' && error.message) ?
+                  error.message : 'Invalid file_id/token'
+      });
+    });
+});
+
 
 exports.api = functions.https.onRequest(app);
