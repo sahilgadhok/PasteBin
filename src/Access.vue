@@ -89,6 +89,21 @@ export default {
       this.signInForm.password = '';
     },
     signIn: function () {
+      axios.get('signin', {
+        query: {
+          username: this.signInForm.username,
+          password: this.signInForm.password
+        }
+      }).then(function (res) {
+        if (res.user) {
+          console.log(res.user[0]);
+          // set authentication token? 
+
+        }
+        console.log(res);
+      }).catch(function (err) {
+        console.log(err);
+      });
       this.closeSignInModal();
       this.sessionToken = 'foobar';
     },
