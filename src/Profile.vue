@@ -52,7 +52,6 @@
 const profiles = [
   {
     name: 'Tim Struggles',
-    email: 'timstruggles@mail.com',
     username: 'TheStruggle',
     pastes: [
       {
@@ -66,7 +65,6 @@ const profiles = [
   },
   {
     name: 'Foo',
-    email: 'foo@mail.com',
     username: 'Foo',
     friends: [
       {username: 'TheStruggle'}
