@@ -1,4 +1,4 @@
-# Assignment #2
+# Assignment #3
 
 ## Team Members
 - Jan Edmund Lazo (999700408)
@@ -7,6 +7,8 @@
 - Sahil Gadhok (997782555)
 
 ## Usage
+
+The public deployment of the service is located at https://filehub-f9a91.firebaseapp.com. 
 
 Clone the repo and open public/index.html in the browser with Javascript enabled.
 The repo includes all runtime dependencies required for public/index.html to display a Single-Page Application (SPA).
