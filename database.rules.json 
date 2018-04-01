@@ -3,7 +3,7 @@
     "file": {
       "$fileid": {
         ".read": "!root.child('userprofile').child('username').exists()",
-        ".write": "!data.exists() && root.child('file').child($fileid).exists() && !root.child('userprofile').child('username').exists() ",
+        ".write": "!data.exists() && !root.child('userprofile').child('username').exists() ",
         ".validate": "!root.child('file').child($fileid).child(newData.val()).exists()",
         "text": {
           ".validate": "newData.isString() && newData.val().length < 2000"
@@ -11,7 +11,7 @@
         "comments": {
           ".read": true,
            "$commentid": {
-            ".write": "!data.exists() && root.child('comment').child($commentid).exists() && !root.child('userprofile').child('username').exists()",
+            ".write": "!data.exists() && !root.child('userprofile').child('username').exists()",
             ".validate": "!root.child('comment').child($commentid).exists()"
            } 
         }
@@ -20,15 +20,15 @@
     "public_files": {
       ".read" : true,
       "$publicfileid": {
-        ".write": "!data.exists() && root.child('file').child($publicfileid).exists()",
+        ".write": "!data.exists()",
         ".validate": "!root.child('file').child($publicfileid).exists()"
       }
     },
     "comment": {
       "$commentid": {
         ".read" : "!root.child('userprofile').child('username').exists()",
-        ".write": "!data.exists() && root.child('comment').child($commentid).exists() && !root.child('userprofile').child('username').exists() ",
-        ".validate": "!data.exists()",//"!root.child('comment').child($commentid).child(newData.val()).exists()",
+        ".write": "!data.exists() && !root.child('userprofile').child('username').exists() ",
+        ".validate": "!root.child('comment').child($commentid).child(newData.val()).exists()",
         "commentText": {
        
           ".validate" : "(newData.isString() && newData.val().length < 140)"
