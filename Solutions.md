@@ -26,11 +26,5 @@ In our app there are 2 main end-users to consider.
 
 ## API Documentation
 
-## Features to be Completed
-NOTE: The features mentioned below will be implemented in the back-end (A3). For the purposes of the front-end, we have used mock data to simulate the features.
-
-- Groups: Users can create and join groups. When in a group, a user can share files that can only be viewed by other group members. Group creators can invite and/or kick other members from their group. Additionally, groups can be private or public.
-- Friend Requests: A user can request to be friends with another user in order to share files with them. The list of friends can be viewed on the profile page. 
-- Comments: Users can comment on the file view page underneath the raw text of the file.
 
 [a1-proposal]: https://github.com/csc309-18s/assignment-1-jansanchitdanielshannon#project-proposal
