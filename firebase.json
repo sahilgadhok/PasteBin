@@ -16,11 +16,13 @@
         "source": "**",
         "destination": "/index.html"
       }
+    ],
+    "predeploy": [
+      "npm run lint"
     ]
   },
   "functions": {
     "predeploy": [
-      "npm run lint",
       "npm --prefix \"$RESOURCE_DIR\" run lint"
     ]
   }
