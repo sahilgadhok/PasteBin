@@ -71,7 +71,7 @@ export default {
   name: 'Account',
   data: function () {
     return {
-      sessionUsername: 'TheStruggle',
+      sessionUsername: '',
       signInForm: {
         username: '',
         password: '',
@@ -101,11 +101,12 @@ export default {
       }
 
       const vm = this;
-      axios.post(cloudUrl + '/auth', {
+      axios.post(cloudUrl + '/signin', {
           username: this.signInForm.username,
           password: this.signInForm.password
         })
         .then(function (response) {
+          vm.sessionUsername = vm.signInForm.username;
           vm.sessionToken = response.data.token;
           vm.closeSignInModal();
         })
@@ -117,8 +118,15 @@ export default {
         });
     },
     signOut: function () {
-      // TODO: tell the server that this user sign outs
-      this.sessionToken = null;
+      const vm = this;
+      axios.post(cloudUrl + '/signout', {
+          username: this.sessionUsername,
+          token: this.sessionToken
+        })
+        .then(function () {
+          vm.sessionUsername = '';
+          vm.sessionToken = null;
+        });
     },
     openSignUpModal: function () {
       this.$modal.show('signUp');
