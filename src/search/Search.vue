@@ -60,7 +60,7 @@ export default {
                   id: fid,
                   filename: file.name,
                   datetime: file.created,
-                  url: '#/file/' + fid
+                  url: '/file/' + fid
                 };
               });
             }))

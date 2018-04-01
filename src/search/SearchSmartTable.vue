@@ -19,8 +19,8 @@
     <tbody v-if="displayed.length > 0">
       <tr v-for="row in displayed" v-bind:key="makeRowKey(row)">
         <td v-for="(prop, index) in table.props" v-bind:key="index">
-          <a target="_blank" v-if="prop === 'url'"
-          v-bind:href="row.value[prop]">Link</a>
+          <router-link v-if="prop === 'url'"
+          v-bind:to="row.value[prop]">Link</router-link>
           <span v-else-if="prop === 'datetime'">{{prettifyDate(row.value[prop])}}</span>
           <span v-else>{{row.value[prop]}}</span>
         </td>

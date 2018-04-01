@@ -2,7 +2,7 @@
   <div id="upload-page">
     <h2>Upload File or Paste Text</h2>
     <div class="bg-success" v-if="newFile.show">File Created!
-      <a target="_blank" v-bind:href="newFile.url">{{newFile.url}}</a>
+      <router-link v-bind:to="newFile.url">{{'/#' + newFile.url}}</router-link>
     </div>
     <div class="bg-danger" v-if="error">{{error}}</div>
     <form v:on-submit.prevent="onSubmit">
@@ -73,14 +73,18 @@ export default {
           // TODO: What if the file object doesn't exist?
           const newFileEntry = db.ref('/file').push();
           newFileEntry.set({
-            name: filename,
-            content: content,
-            created: (new Date()).toISOString()
-          });
-          db.ref('/public_files/' + newFileEntry.key).set(1);
-          vm.newFile.url = '#/file/' + newFileEntry.key;
-          vm.newFile.show = true;
-          vm.inputDisabled = false;
+              name: filename,
+              content: content,
+              created: (new Date()).toISOString()
+            })
+            .then(function () {
+              return db.ref('/public_files/' + newFileEntry.key).set(1);
+            })
+            .then(function () {
+              vm.newFile.url = '/file/' + newFileEntry.key;
+              vm.newFile.show = true;
+              vm.inputDisabled = false;
+            });
       }
 
       if (vm.file) {
