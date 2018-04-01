@@ -5,10 +5,15 @@ const cert = require('./filehub-f9a91-firebase-adminsdk-i3j2q-d3432e7ad7.json');
 config.credential = admin.credential.cert(cert);
 admin.initializeApp(config);
 
+const express = require('express');
+const app = express();
+const cors = require('cors')({origin: true});
+app.use(cors);
+
 const argon2 = require('@phc/argon2');
 
 // Add new user to the database
-exports.signup = functions.https.onRequest(function (req, res) {
+app.post('/signup', function (req, res) {
   if (!req.body.username || !req.body.password) {
     res.status(400).send({
         message: 'Missing username/password'
@@ -43,7 +48,7 @@ exports.signup = functions.https.onRequest(function (req, res) {
 });
 
 // Check if user exists and validate password
-exports.auth = functions.https.onRequest(function (req, res) {
+app.post('/auth', function (req, res) {
   if (!req.body.username || !req.body.password) {
     res.status(400).send({
         message: 'Missing username/password'
@@ -77,3 +82,5 @@ exports.auth = functions.https.onRequest(function (req, res) {
       });
     });
 });
+
+exports.api = functions.https.onRequest(app);
