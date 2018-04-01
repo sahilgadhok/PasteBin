@@ -14,10 +14,6 @@
           </div>
           <div class="panel-body">
             <div class="form-group">
-              <label for="profile-email">Email Address</label>
-              <h4 id="profile-email">{{profileInfo.email}}</h4>
-            </div>
-            <div class="form-group">
               <label for="profile-username">User Name</label>
               <h4 id="profile-username">{{profileInfo.username}}</h4>
             </div>
