@@ -60,6 +60,13 @@
 </template>
 
 <script>
+import axios from 'axios';
+
+const firebase = (typeof window === 'object' &&
+                  typeof window.firebase === 'object') ?
+                  window.firebase : null;
+const cloudUrl = 'https://us-central1-filehub-f9a91.cloudfunctions.net/api';
+
 export default {
   name: 'Account',
   data: function () {
@@ -87,10 +94,30 @@ export default {
       this.signInForm.password = '';
     },
     signIn: function () {
-      this.closeSignInModal();
-      this.sessionToken = 'foobar';
+      if (!firebase ||
+          !this.signInForm.username ||
+          !this.signInForm.password) {
+        return;
+      }
+
+      const vm = this;
+      axios.post(cloudUrl + '/auth', {
+          username: this.signInForm.username,
+          password: this.signInForm.password
+        })
+        .then(function (response) {
+          vm.sessionToken = response.data.token;
+          vm.closeSignInModal();
+        })
+        .catch(function (error) {
+          console.error(error);
+          if (error.message) {
+            console.error(error.message);
+          }
+        });
     },
     signOut: function () {
+      // TODO: tell the server that this user sign outs
       this.sessionToken = null;
     },
     openSignUpModal: function () {
