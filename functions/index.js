@@ -10,7 +10,9 @@ const argon2 = require('@phc/argon2');
 // Add new user to the database
 exports.signup = functions.https.onRequest(function (req, res) {
   if (!req.body.username || !req.body.password) {
-    res.status(400).send('Missing username/password');
+    res.status(400).send({
+        message: 'Missing username/password'
+    });
     return;
   }
 
@@ -28,18 +30,24 @@ exports.signup = functions.https.onRequest(function (req, res) {
       db.ref('/user/' + req.body.username).set({
         password: hash
       });
-      res.status(200).send('Created ' + req.body.username);
+      res.status(200).send({
+          message: 'Created ' + req.body.username
+      });
       return true;
     })
     .catch(function (error) {
-      res.status(403).send('Invalid username/password');
+      res.status(403).send({
+        message: 'Invalid username/password'
+      });
     });
 });
 
 // Check if user exists and validate password
 exports.auth = functions.https.onRequest(function (req, res) {
   if (!req.body.username || !req.body.password) {
-    res.status(400).send('Missing username/password');
+    res.status(400).send({
+        message: 'Missing username/password'
+    });
     return;
   }
 
@@ -58,10 +66,14 @@ exports.auth = functions.https.onRequest(function (req, res) {
       return admin.auth().createCustomToken(req.body.username);
     })
     .then(function (token) {
-      res.status(200).send(token);
+      res.status(200).send({
+        token: token
+      });
       return true;
     })
     .catch(function (error) {
-      res.status(403).send('Invalid username/password');
+      res.status(403).send({
+        message: 'Invalid username/password'
+      });
     });
 });
