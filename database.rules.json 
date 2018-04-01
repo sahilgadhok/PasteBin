@@ -1,0 +1,51 @@
+{
+  "rules": {
+    "file": {
+      "$fileid": {
+        ".read": "!root.child('userprofile').child('username').exists()",
+        ".write": "!data.exists() && root.child('file').child($fileid).exists() && !root.child('userprofile').child('username').exists() ",
+        ".validate": "!root.child('file').child($fileid).child(newData.val()).exists()",
+        "text": {
+          ".validate": "newData.isString() && newData.val().length < 2000" //valid size of text less than 2000(can change it)
+        },
+        "comments": {
+          ".read": true,
+           "$commentid": {
+            ".write": "!data.exists() && root.child('comment').child($commentid).exists() && !root.child('userprofile').child('username').exists()",
+            ".validate": "!root.child('comment').child($commentid).exists()"
+           } 
+        }
+      }
+    },
+    "public_files": {
+      ".read" : true,
+      "$publicfileid": {
+        ".write": "!data.exists() && root.child('file').child($publicfileid).exists()",
+        ".validate": "!root.child('file').child($publicfileid).exists()"
+      }
+    },
+    //"group": {
+      //"$groupid" : {
+        //".read": "!root.child('group').child($groupid).exists()",// same as below
+        //".write": "!data.exists() && root.child('group').child($groupid).exists()", // there has to be more condition here for the user member stuff
+        //".validate" : "!root.child('group').child($groupid).child(newData.val()).exists() && (newData.isString() && newData.val().length < 20) " //make groupname unique? and is string namesize< 20 char
+      //},
+      //"$groupadmin" : { 
+        //".read": "", //if member exist,
+        //".write": "", //if member is admin,
+        //".validate" : "!root.child('userprofile').child('username').child($groupadmin).exists()" //i dont know if this actually has access to userprofile, but it needs it since admin is foreign key
+     // }
+    //},
+    "comment": {
+      "$commentid": {
+        ".read" : "!root.child('userprofile').child('username').exists()",
+        ".write": "!data.exists() && root.child('comment').child($commentid).exists() && !root.child('userprofile').child('username').exists() ",
+        ".validate": "!data.exists()",//"!root.child('comment').child($commentid).child(newData.val()).exists()",
+        "commentText": {
+       
+          ".validate" : "(newData.isString() && newData.val().length < 140)" //comment is string and less than 140 chars
+        }
+      },
+    }
+  }
+}
