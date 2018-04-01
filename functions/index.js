@@ -114,6 +114,11 @@ app.post('/signin', function (req, res) {
       return userRef.child('token').set(token);
     })
     .then(function () {
+      // Invalidate the token after 30 minutes
+      setTimeout(function () {
+        userRef.child('token').set(null);
+      }, 30 * 60 * 1000);
+
       res.status(200).send({
         token: user.token
       });
@@ -140,7 +145,7 @@ app.post('/signout', function (req, res) {
   userRef.once('value')
     .then(function (snapshot) {
       const user = snapshot.val();
-      if (!user || user.token !== req.body.token) {
+      if (!user || (user.token && user.token !== req.body.token)) {
         return Promise.reject(new Error('Invalid username/token'))
       }
 
