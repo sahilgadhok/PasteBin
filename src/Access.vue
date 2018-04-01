@@ -1,13 +1,19 @@
 <template>
-  <div v-if="sessionToken">
-    <router-link class="btn btn-default" exact
-    v-bind:to="'/profile/' + sessionUsername">Profile</router-link>
-    <button class="btn btn-danger" type="button"
-    v-on:click="signOut()">Sign Out</button>
-  </div>
-  <div v-else>
+  <div>
+    <div v-if="sessionToken">
+      <router-link class="btn btn-default" exact
+      v-bind:to="'/profile/' + sessionUsername">Profile</router-link>
+      <button class="btn btn-danger" type="button"
+      v-on:click="signOut()">Sign Out</button>
+    </div>
+    <div v-else>
+      <button class="btn btn-default" type="button"
+      v-on:click="openSignInModal()">Sign In</button>
+      <button class="btn btn-default" type="button" disabled
+      v-on:click="openSignUpModal()">Sign Up</button>
+    </div>
     <modal name="signIn" width="300" v-bind:click-to-close="false"
-    v-bind:adaptive="true" v-bind:scrollable="true">
+    v-bind:adaptive="true">
       <div class="container-fluid" style="margin-top:20px">
         <form v:on-submit.prevent="onSubmit">
           <div class="form-group">
@@ -30,7 +36,7 @@
       </div>
     </modal>
     <modal name="signUp" width="300" v-bind:click-to-close="false"
-    v-bind:adaptive="true" v-bind:scrollable="true">
+    v-bind:adaptive="true">
       <div class="container-fluid" style="margin-top:20px">
         <form v:on-submit.prevent="onSubmit">
           <div class="form-group">
@@ -52,10 +58,6 @@
         </form>
       </div>
     </modal>
-    <button class="btn btn-default" type="button"
-    v-on:click="openSignInModal()">Sign In</button>
-    <button class="btn btn-default" type="button" disabled
-    v-on:click="openSignUpModal()">Sign Up</button>
   </div>
 </template>
 
