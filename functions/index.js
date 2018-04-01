@@ -115,9 +115,9 @@ app.post('/signin', function (req, res) {
     })
     .then(function () {
       // Invalidate the token after 30 minutes
-      setTimeout(function () {
+      setTimeout(function (userRef) {
         userRef.child('token').set(null);
-      }, 30 * 60 * 1000);
+      }, 30 * 60 * 1000, userRef);
 
       res.status(200).send({
         token: user.token
