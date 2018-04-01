@@ -115,6 +115,10 @@ export default {
   },
   methods: {
     updateProfile: function (username) {
+      if (!this.sessionToken) {
+        this.profileInfo = null;
+        return;
+      }
       const vm = this;
       axios.post([cloudUrl, 'profile', username].join('/'), {
           token: this.sessionToken
@@ -133,6 +137,9 @@ export default {
   watch: {
     username: function (newVal) {
       this.updateProfile(newVal);
+    },
+    sessionToken: function () {
+      this.updateProfile(this.username);
     }
   }
 }
