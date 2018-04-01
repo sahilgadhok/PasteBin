@@ -14,6 +14,34 @@ app.use(cors);
 // Password hashing
 const argon2 = require('@phc/argon2');
 
+// Return a promise, containing the user referred to by this token
+// Return Value: {username, info}
+function getUserByToken(token) {
+  const err = new Error('Invalid token');
+  if (!token) {
+    return Promise.reject(err);
+  }
+
+  const db = admin.database();
+  const p = db.ref('/user').once('value')
+    .then(function (snapshot) {
+      if (!snapshot) {
+        return Promise.reject(err);
+      }
+      const users = snapshot.val();
+      if (!users) {
+        return Promise.reject(err);
+      }
+
+      const matches = Object.keys(users).filter((key) => (users[key].token === token));
+      if (matches.length === 0) {
+        return Promise.reject(err);
+      }
+      return Promise.resolve({username: matches[0], info: users[matches[0]]});
+    });
+  return p;
+}
+
 // Add new user to the database
 app.post('/signup', function (req, res) {
   if (!req.body.username || !req.body.password) {
@@ -178,28 +206,10 @@ app.post('/comment/:file_id', function (req, res) {
 
   // Find the user based on given token
   let username;
-  db.ref('/user').once('value')
-    .then(function (snapshot) {
-      const err = new Error('Invalid token');
-      if (!snapshot) {
-        return Promise.reject(err);
-      }
-      const users = snapshot.val();
-      if (!users) {
-        return Promise.reject(err);
-      }
-
-      console.log(users);
-      const matches = Object.keys(users).filter((key) => (users[key].token === req.body.token));
-      console.log(matches);
-      if (matches.length === 0) {
-        return Promise.reject(err);
-      }
-      username = matches[0];
-      return Promise.resolve(matches[0]);
-    })
+  getUserByToken(req.body.token)
     // find the file
-    .then (function (username) {
+    .then(function (user) {
+      username = user.username;
       return db.ref('/file/' + req.params.file_id).once('value');
     })
     // add the comment
