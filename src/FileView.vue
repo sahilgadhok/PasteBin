@@ -9,7 +9,7 @@
         <p>{{comment.content}}</p>
       </li>
     </ul>
-    <form v:on-submit.prevent="onSubmit" v-if="inputEnabled">
+    <form v:on-submit.prevent="onSubmit" v-if="inputEnabled && sessionToken">
       <div class="form-group">
         <label for="comment-self">Leave a Comment</label>
         <textarea id="comment-self" class="form-control" rows="5"
@@ -22,6 +22,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+const cloudUrl = 'https://us-central1-filehub-f9a91.cloudfunctions.net/api';
 const firebase = (typeof window === 'object' &&
                   typeof window.firebase === 'object') ?
                   window.firebase : null;
@@ -99,15 +101,18 @@ export default {
         return;
       }
 
-      const db = firebase.database();
-      const newComment = db.ref('/comment/' + this.hash).push();
-      newComment.set({
-        user: 'timStruggle',
-        content: this.comment,
-        created: (new Date()).toISOString()
-      })
-      this.updateComments(this.hash);
-      this.comment = '';
+      const vm = this;
+      axios.post([cloudUrl, 'comment', this.hash].join('/'), {
+          comment: this.comment,
+          token: this.sessionToken
+        })
+        .then(function () {
+          vm.updateComments(vm.hash);
+          vm.comment = '';
+        })
+        .catch(function (error) {
+          console.error(error);
+        });
     },
     makeRowKey: function (row) {
       return [row.id, Date.now()].join('-');

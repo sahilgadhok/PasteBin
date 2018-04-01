@@ -14,10 +14,7 @@
     },
     "comment": {
       "$fid": {
-        ".read": true,
-        "$id": {
-          ".write": "!data.exists()"
-        }
+        ".read": true
       }
     }
   }
