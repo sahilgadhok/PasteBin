@@ -2,34 +2,26 @@
   <div class="container-fluid" v-if="profileInfo">
     <div class="row panel">
       <div class="panel-heading">
-        <!-- Differentiate friends from yourself -->
-        <h3 class="profile-header" v-if="me">Your Profile</h3>
-        <h3 class="profile-header" v-else>{{profileInfo.name}}'s Profile</h3>
+        <h2 class="profile-header">Your Profile</h2>
       </div>
       <div class="col-md-4 col-sm-4 col-xs">
         <!-- The side panel containing the account info -->
         <div class="panel panel-primary" id="accountInfo">
-          <div class="panel-heading ">
-            <h5>Account Info </h5>
+          <div class="panel-heading">
+            <h3 class="panel-title">Account Info</h3>
           </div>
           <div class="panel-body">
             <div class="form-group">
-              <label for="profile-email">Email Address</label>
-              <h4 id="profile-email">{{profileInfo.email}}</h4>
-            </div>
-            <div class="form-group">
               <label for="profile-username">User Name</label>
-              <h4 id="profile-username">{{profileInfo.username}}</h4>
+              <h4 id="profile-username">{{username}}</h4>
             </div>
             <div class="form-group">
-              <label for="friends">Friends</label>
-              <div v-if="profileInfo.friends">
-                <h4 v-for="friend in profileInfo.friends" v-bind:key="friend.name">
-                  <router-link exact v-bind:to="'/profile/' + friend.username"
-                  >{{friend.username}}</router-link>
-                </h4>
-              </div>
+              <label for="profile-email">Email Address</label>
+              <input id="profile-email" class="form-control"
+              v-model="profileInfo.email">
             </div>
+            <button class="btn btn-default" type="button"
+            v-on:click="updateInfo()">Update</button>
           </div>
         </div>
       </div>
@@ -37,7 +29,7 @@
       <div class="col-md-8 col-sm-8">
         <div class="panel panel-primary">
           <div class="panel-heading">
-            <h5>Uploads</h5>
+            <h3 class="panel-title">Uploads</h3>
           </div>
           <div class="panel-body" v-if="sessionToken && profileInfo.files">
             <h4 v-for="paste in profileInfo.files" v-bind:key="paste.name">
@@ -58,42 +50,6 @@ import axios from 'axios';
 
 const cloudUrl = 'https://us-central1-filehub-f9a91.cloudfunctions.net/api';
 
-// TODO: move to database
-// const profiles = [
-//   {
-//     name: 'Tim Struggles',
-//     email: 'timstruggles@mail.com',
-//     username: 'TheStruggle',
-//     pastes: [
-//       {
-//         name: 'gistfile1.txt',
-//         url: '/file/a828a18c9ea19b9f84b2cc0c640a870d'
-//       }
-//     ],
-//     friends: [
-//       {username: 'Foo'}
-//     ]
-//   },
-//   {
-//     name: 'Foo',
-//     email: 'foo@mail.com',
-//     username: 'Foo',
-//     friends: [
-//       {username: 'TheStruggle'}
-//     ]
-//   }
-// ];
-// TODO: move to host server
-// function getProfile(username) {
-//   if (!username) {
-//     return null;
-//   }
-//   const matches = profiles.filter(function (row) {
-//     return row.username === this.toString();
-//   }, username);
-//   return matches.length > 0 ? matches[0] : null;
-// }
-
 export default {
   name: 'Profile',
   props: {
@@ -108,11 +64,6 @@ export default {
     }
   },
   store: ['sessionToken'],
-  computed: {
-    me: function () {
-      return true;
-    }
-  },
   methods: {
     updateProfile: function (username) {
       if (!this.sessionToken) {
@@ -125,6 +76,19 @@ export default {
         })
         .then(function (response) {
           vm.profileInfo = response.data;
+        })
+        .catch(function (error) {
+          console.error(error);
+        })
+    },
+    updateInfo: function () {
+      const vm = this;
+      axios.put([cloudUrl, 'user', this.username].join('/'), {
+          email: this.profileInfo.email,
+          token: this.sessionToken
+        })
+        .then(function () {
+          vm.updateProfile(vm.username);
         })
         .catch(function (error) {
           console.error(error);
