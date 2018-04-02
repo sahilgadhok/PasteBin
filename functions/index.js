@@ -329,7 +329,7 @@ app.post('/file', function(req, res) {
     })
     .catch(function (error) {
       res.status(403).send({
-      message: 'Something went wrong'
+        message: 'Something went wrong'
     });
   });
 });
