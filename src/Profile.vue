@@ -17,7 +17,7 @@
             </div>
             <div class="form-group">
               <label for="profile-email">Email Address</label>
-              <input id="profile-email" class="form-control"
+              <input type="email" id="profile-email" class="form-control"
               v-model="profileInfo.email">
             </div>
             <button class="btn btn-default" type="button"
