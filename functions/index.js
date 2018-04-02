@@ -251,7 +251,7 @@ app.post('/comment/:file_id', function (req, res) {
     });
 });
 app.put('/user/:username/', function (req, res) {
-  if (!req.params.username || !req.body.useremail) {
+  if (!req.params.username || !req.body.useremail || !req.body.token) {
     res.status(400).send({
         message: 'Missing username/useremail'
     });
