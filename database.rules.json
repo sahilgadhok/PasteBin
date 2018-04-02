@@ -1,9 +1,31 @@
 {
   "rules": {
+    "user": {
+      "$username": {
+        "password": {
+          ".validate": "newData.isString()"
+        },
+        "email": {
+          ".validate": "newData.isString()"
+        }
+      }
+    },
     "file": {
       "$id": {
-        ".read": "!data.child('uid').exists() || (auth != null && data.child('uid').val() == auth.uid)",
-        ".write": "!data.exists() && (!newData.child('uid').exists() || (auth != null && newData.child('uid').val() == auth.uid))"
+        ".read": "!data.child('username').exists()",
+        ".write": "!data.exists() && !newData.child('username').exists()",
+        "name": {
+          ".validate": "newData.isString()"
+        },
+        "content": {
+          ".validate": "newData.isString()"
+        },
+        "created": {
+          ".validate": "newData.isString()"
+        },
+        "username": {
+          ".validate": "newData.isString() && root.child('user').child(newData.val()).exists()"
+        }
       }
     },
     "public_files": {
@@ -14,7 +36,19 @@
     },
     "comment": {
       "$fid": {
-        ".read": true
+        ".read": true,
+        "$id": {
+          ".write": "!data.exists() && root.child('file').child($fid).exists()",
+          "user": {
+            ".validate": "newData.isString() && root.child('user').child(newData.val()).exists()"
+          },
+          "content": {
+            ".validate": "newData.isString()"
+          },
+          "created": {
+            ".validate": "newData.isString()"
+          }
+        }
       }
     }
   }
