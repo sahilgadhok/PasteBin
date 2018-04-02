@@ -32,9 +32,16 @@
             <h3 class="panel-title">Uploads</h3>
           </div>
           <div class="panel-body" v-if="sessionToken && profileInfo.files">
-            <h4 v-for="file in profileInfo.files" v-bind:key="makeRowKey(file)">
-              <router-link exact v-bind:to="'/file/' + file.id">{{file.name}}</router-link>
-            </h4>
+            <ul class="list-unstyled">
+              <li class="clearfix" style="margin-bottom:10px"
+              v-for="file in profileInfo.files" v-bind:key="makeRowKey(file)">
+                <router-link exact v-bind:to="'/file/' + file.id">{{file.name}}</router-link>
+                <span class="pull-right">
+                  <button class="btn btn-sm btn-danger" type="button"
+                  v-on:click="deleteFile(file.id)">Delete</button>
+                </span>
+              </li>
+            </ul>
           </div>
           <div class="panel-body" v-else>
             <h4>No Uploads available</h4>
@@ -79,10 +86,11 @@ export default {
           vm.profileInfo = {
             username: response.data.username,
             email: response.data.email,
-            files: Object.keys(file).map((key) => ({
-              id: key,
-              name: file[key]
-            }))
+            files: typeof file === 'object' ?
+                    Object.keys(file).map((key) => ({
+                      id: key,
+                      name: file[key]
+                    })) : null
           }
         })
         .catch(function (error) {
@@ -103,8 +111,18 @@ export default {
         })
     },
     makeRowKey: function (row) {
-      return [row.id, Date.now()].join('-');
-    }
+      return [row.name, row.id, Date.now()].join('-');
+    },
+    deleteFile: function (file_id) {
+      const vm = this;
+      axios.delete(cloudUrl + '/file/' + file_id + '?token=' + this.sessionToken)
+        .then(function () {
+          vm.updateProfile(vm.username);
+        })
+        .catch(function (error) {
+          console.error(error);
+        })
+    },
   },
   created: function () {
     this.updateProfile(this.username);

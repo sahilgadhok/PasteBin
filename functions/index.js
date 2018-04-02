@@ -252,6 +252,44 @@ app.post('/comment/:file_id', function (req, res) {
     });
 });
 
+// Delete a user-owned file
+app.delete('/file/:file_id', function (req, res) {
+  if (!req.params.file_id || !req.query.token) {
+    res.status(400).send({
+      message: 'Missing file_id/token'
+    });
+    return;
+  }
+
+  const db = admin.database();
+  getUserByToken(req.query.token)
+    // Delete file id reference in user
+    .then(function (user) {
+      const file_id = ['/user', user.username, 'file', req.params.file_id].join('/');
+      return db.ref(file_id).set(null);
+    })
+    // Delete the comments for this file
+    .then(function () {
+      return db.ref('/comment/' + req.params.file_id).set(null);
+    })
+    // Delete the file since all foreign references are deleted
+    .then(function () {
+      return db.ref('/file/' + req.params.fild_id).set(null);
+    })
+    .then(function () {
+      res.status(200).send({
+        message: 'file is deleted'
+      });
+      return true;
+    })
+    .catch(function () {
+      res.status(403).send({
+        message: (typeof error === 'object' && error.message) ?
+                  error.message : 'Invalid file_id/token'
+      });
+    })
+});
+
 app.put('/user/:username/', function (req, res) {
   if (!req.params.username || !req.body.token) {
     res.status(400).send({
