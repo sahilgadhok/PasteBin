@@ -63,6 +63,26 @@ export default {
       vm.error = '';
 
       function send(filename, content) {
+          if (vm.sessionToken) {
+            axios.post(cloudUrl + '/file', {
+                name: filename,
+                content: content,
+                token: this.sessionToken
+              })
+              .then(function (response) {
+                // refresh file contents
+                console.log(response.data);
+              })
+              .catch(function (error) {
+                console.error(error);
+                if (error.message) {
+                  console.error(error.message);
+                }
+              });
+
+            return;
+          }
+
           if (!firebase) {
             vm.error = 'Failed to create the file';
             vm.inputDisabled = false;
@@ -97,35 +117,11 @@ export default {
             vm.inputDisabled = false;
             return;
           }
-          if (!vm.sessionToken) {
-            send(vm.file.name, event.target.result);
-          } else {
-            axios.post(cloudUrl + '/file', {
-              sessionToken: this.sessionToken,
-              filename: vm.file.name,
-              content: event.target.result
-            }).catch(function (error) {
-              console.error(error);
-              if (error.message) {
-                console.error(error.message);
-              }
-            });
-          }
+
+          send(vm.file.name, event.target.result);
         };
       } else {
-        if (!vm.sessionToken) {
-          send(vm.paste.filename, vm.paste.content);
-        } else {
-          axios.post(cloudUrl + '/file', {
-            sessionToken: this.sessionToken,
-            filename: vm.paste.filename,
-            content: vm.paste.content
-          }).catch(function (error) {
-          console.error(error);
-          if (error.message) {
-            console.error(error.message);
-          }
-        });
+        send(vm.paste.filename, vm.paste.content);
       }
     }
   }
