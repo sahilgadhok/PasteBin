@@ -1,20 +1,38 @@
 {
   "rules": {
     "file": {
-      "$id": {
-        ".read": "!data.child('uid').exists() || (auth != null && data.child('uid').val() == auth.uid)",
-        ".write": "!data.exists() && (!newData.child('uid').exists() || (auth != null && newData.child('uid').val() == auth.uid))"
+      "$fileid": {
+        ".read": "!root.child('userprofile').child('username').exists()",
+        ".write": "!data.exists() && !root.child('userprofile').child('username').exists() ",
+        ".validate": "!root.child('file').child($fileid).child(newData.val()).exists()",
+        "text": {
+          ".validate": "newData.isString() && newData.val().length < 2000"
+        },
+        "comments": {
+          ".read": true,
+           "$commentid": {
+            ".write": "!data.exists() && !root.child('userprofile').child('username').exists()",
+            ".validate": "!root.child('comment').child($commentid).exists()"
+           } 
+        }
       }
     },
     "public_files": {
-      ".read": true,
-      "$fid": {
-        ".write": "!data.exists() && root.child('file').child($fid).exists()"
+      ".read" : true,
+      "$publicfileid": {
+        ".write": "!data.exists()",
+        ".validate": "!root.child('file').child($publicfileid).exists()"
       }
     },
     "comment": {
-      "$fid": {
-        ".read": true
+      "$commentid": {
+        ".read" : "!root.child('userprofile').child('username').exists()",
+        ".write": "!data.exists() && !root.child('userprofile').child('username').exists() ",
+        ".validate": "!root.child('comment').child($commentid).child(newData.val()).exists()",
+        "commentText": {
+       
+          ".validate" : "(newData.isString() && newData.val().length < 140)"
+        }
       }
     }
   }
