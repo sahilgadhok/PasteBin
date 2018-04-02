@@ -189,13 +189,13 @@ app.post('/profile/:username', function (req, res) {
       if (!user ||
           !user.token ||
           user.token.value !== req.body.token ||
-          isTokenInvalid(token)) {
+          isTokenInvalid(user.token)) {
         return Promise.reject(err);
       }
 
-      // echo back the username for now
       res.status(200).send({
         username: req.params.username,
+        email: user.email || ''
       });
       return true;
     })
@@ -247,6 +247,47 @@ app.post('/comment/:file_id', function (req, res) {
       res.status(403).send({
         message: (typeof error === 'object' && error.message) ?
                   error.message : 'Invalid file_id/token'
+      });
+    });
+});
+
+app.put('/user/:username/', function (req, res) {
+  if (!req.params.username || !req.body.email || !req.body.token) {
+    res.status(400).send({
+      message: 'Missing username/email/token'
+    });
+    return;
+  }
+
+  // Find the user based on given token
+  const db = admin.database();
+  const refUser = db.ref('/user/' + req.params.username);
+  refUser.once('value')
+    .then(function (snapshot) {
+      const err = new Error('Invalid token');
+      if (!snapshot) {
+        return Promise.reject(err);
+      }
+      const user = snapshot.val();
+      if (!user ||
+          !user.token ||
+          user.token.value !== req.body.token ||
+          isTokenInvalid(user.token)) {
+        return Promise.reject(err);
+      }
+
+      return refUser.child('email').set(req.body.email);
+    })
+    .then(function () {
+      res.status(200).send({
+        message: 'email changed'
+      });
+      return true;
+    })
+    .catch(function (error) {
+      res.status(403).send({
+        message: (typeof error === 'object' && error.message) ?
+                  error.message : 'Invalid username/email/token'
       });
     });
 });
