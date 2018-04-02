@@ -99,20 +99,23 @@ In our app there are 2 main end-users to consider.
 ## Backend Services
 
 ### Hosting
-    - hosted at [https://filehub-f9a91.firebaseapp.com][filehub-hosting]
-    - powered by [Google Firebase][google-firebase]
-    - used for hosting the UI online
+
+- hosted at [https://filehub-f9a91.firebaseapp.com][filehub-hosting]
+- powered by [Google Firebase][google-firebase]
+- used for hosting the UI online
 
 ### Database
-    - hosted at [https://filehub-f9a91.firebaseio.com][filehub-db]
-    - powered by [Firebase Database][firebase-database]
-    - centralized data storage for files, users, comments, etc.
-    - supports REST API for public access
+
+- hosted at [https://filehub-f9a91.firebaseio.com][filehub-db]
+- powered by [Firebase Database][firebase-database]
+- centralized data storage for files, users, comments, etc.
+- supports REST API for public access
 
 ### API
-    - hosted at [https://us-central1-filehub-f9a91.cloudfunctions.net/api][filehub-db]
-    - powered by [Cloud Function][firebase-cloudFunction]
-    - integrated to handle https request to the server.
+
+- hosted at [https://us-central1-filehub-f9a91.cloudfunctions.net/api][filehub-db]
+- powered by [Cloud Function][firebase-cloudFunction]
+- integrated to handle https request to the server.
 
 [filehub-hosting]: https://filehub-f9a91.firebaseapp.com
 [filehub-db]: https://filehub-f9a91.firebaseio.com
