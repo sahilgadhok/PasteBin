@@ -274,7 +274,7 @@ app.delete('/file/:file_id', function (req, res) {
     })
     // Delete the file since all foreign references are deleted
     .then(function () {
-      return db.ref('/file/' + req.params.fild_id).set(null);
+      return db.ref('/file/' + req.params.file_id).set(null);
     })
     .then(function () {
       res.status(200).send({
