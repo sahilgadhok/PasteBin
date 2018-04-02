@@ -17,10 +17,14 @@
             </div>
             <div class="form-group">
               <label for="profile-email">Email Address</label>
+              <p v-if="errors.length">
+                <ul>
+                  <li v-for="error in errors">{{ error }}</li>
+                </ul>
               <input id="profile-email" class="form-control"
               v-model="profileInfo.email">
-            </div>
             <button class="btn btn-default" type="button"
+            </div>
             v-on:click="updateInfo()">Update</button>
           </div>
         </div>
@@ -78,6 +82,12 @@ export default {
         return;
       }
       const vm = this;
+      vm.errors = [];
+      var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      if (!re.test(vm.profileInfo.email)) {
+        this.errors.push("Please enter a valid email");
+        return;
+      }
       axios.post([cloudUrl, 'profile', username].join('/'), {
           token: this.sessionToken
         })
