@@ -292,4 +292,31 @@ app.put('/user/:username/', function (req, res) {
     });
 });
 
+// Upload file
+app.post('/file', function(req, res) {
+  if (!req.body.filename || !req.body.content) {
+    res.status(400).send({
+        message: 'Missing filename/content'
+    });
+    return;
+  }
+
+  const db = admin.database();
+  getUserByToken(req.body.sessionToken)
+    .then(function (user) {
+      const newFileEntry = db.ref('/file').push();
+      newFileEntry.set({
+        name: filename,
+        content: content,
+        username: username,
+        created: (new Date()).toISOString()
+      });
+    })
+    .catch(function (error) {
+      res.status(403).send({
+      message: 'Something went wrong'
+    });
+  });
+});
+
 exports.api = functions.https.onRequest(app);

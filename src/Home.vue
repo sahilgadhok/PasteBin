@@ -29,6 +29,7 @@
 const firebase = (typeof window === 'object' &&
                   typeof window.firebase === 'object') ?
                   window.firebase : null;
+const cloudUrl = 'https://us-central1-filehub-f9a91.cloudfunctions.net/api';
 
 export default {
   name: 'Home',
@@ -96,11 +97,36 @@ export default {
             vm.inputDisabled = false;
             return;
           }
-
-          send(vm.file.name, event.target.result);
+          if (!vm.sessionToken) {
+            send(vm.file.name, event.target.result);
+          } else {
+            axios.post(cloudUrl + '/file', {
+              sessionToken: this.sessionToken,
+              filename: vm.file.name,
+              content: event.target.result
+            }).catch(function (error) {
+              console.error(error);
+              if (error.message) {
+                console.error(error.message);
+              }
+            });
+          }
         };
       } else {
-        send(vm.paste.filename, vm.paste.content);
+        if (!vm.sessionToken) {
+          send(vm.paste.filename, vm.paste.content);
+        } else {
+          axios.post(cloudUrl + '/file', {
+            sessionToken: this.sessionToken,
+            filename: vm.paste.filename,
+            content: vm.paste.content
+          }).catch(function (error) {
+          console.error(error);
+          if (error.message) {
+            console.error(error.message);
+          }
+        });
+        }
       }
     }
   }
