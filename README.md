@@ -10,14 +10,14 @@
 
 The public deployment of the service is located at https://filehub-f9a91.firebaseapp.com. 
 
-Clone the repo and open public/index.html in the browser with Javascript enabled.
-The repo includes all runtime dependencies required for public/index.html to display a Single-Page Application (SPA).
+## For self hosting
 
-## Compile from Source
+sign up for google account to create firebase account and enable hosting
 
 ```sh
-npm install
-npm run build
+npm install -g firebase tools
+cd a3_repo
+firebase deploy
 ```
 
 ## Dependencies
