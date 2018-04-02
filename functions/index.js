@@ -250,10 +250,11 @@ app.post('/comment/:file_id', function (req, res) {
       });
     });
 });
+
 app.put('/user/:username/', function (req, res) {
   if (!req.params.username || !req.body.useremail || !req.body.token) {
     res.status(400).send({
-        message: 'Missing username/useremail'
+      message: 'Missing username/useremail/token'
     });
     return;
   }
@@ -274,11 +275,8 @@ app.put('/user/:username/', function (req, res) {
         return Promise.reject(err);
       }
 
-      
-    
       return refUser.child('email').set(req.body.email);
     })
-    
     .then(function () {
       res.status(200).send({
         message: 'email changed'
