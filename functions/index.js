@@ -193,9 +193,9 @@ app.post('/profile/:username', function (req, res) {
         return Promise.reject(err);
       }
 
-      // echo back the username for now
       res.status(200).send({
         username: req.params.username,
+        email: user.email || ''
       });
       return true;
     })
@@ -252,9 +252,9 @@ app.post('/comment/:file_id', function (req, res) {
 });
 
 app.put('/user/:username/', function (req, res) {
-  if (!req.params.username || !req.body.useremail || !req.body.token) {
+  if (!req.params.username || !req.body.email || !req.body.token) {
     res.status(400).send({
-      message: 'Missing username/useremail/token'
+      message: 'Missing username/email/token'
     });
     return;
   }
