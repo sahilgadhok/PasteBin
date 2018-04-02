@@ -21,6 +21,7 @@
                 <ul>
                   <li v-for="error in errors">{{ error }}</li>
                 </ul>
+              </p>
               <input id="profile-email" class="form-control"
               v-model="profileInfo.email">
             <button class="btn btn-default" type="button"
