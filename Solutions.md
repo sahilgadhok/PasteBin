@@ -21,5 +21,15 @@ In our app there are 2 main end-users to consider.
 
 ## API Documentation
 
+## Backend Services
+
+### Hosting 
+  - [Google Firebase][google-firebase]
+
+### Database
+  - [Firebase database][firebase-database]
 
 
+
+[google-firebase]: https://firebase.google.com/
+[firebase-database]: https://firebase.google.com/docs/database/
