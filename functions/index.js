@@ -265,18 +265,21 @@ app.put('/user/:username/', function (req, res) {
       if (!snapshot) {
         return Promise.reject(err);
       }
-      const users = snapshot.val();
-      if (!users) {
+      //const users = snapshot.val();
+      const user = snapshot.val();
+      if (!user ||
+          !user.token ||
+          user.token.value !== req.body.token ||
+          isTokenInvalid(token)) {
         return Promise.reject(err);
       }
 
       
-      const matches = (users[username].token === req.body.token);
+      //const matches = ((users[username].token && user[username].token.value) === req.body.token);
       
-      if (matches.length === 0 || (isTokenInvalid(user[matches[0]].token))) {
-        return Promise.reject(err);
-      }
-      username = matches[0];
+      // if (matches.length === 0 || (isTokenInvalid(user[username].token))) {
+      //   return Promise.reject(err);
+      // }
       return refUser.child('email').set(req.body.email);
     })
     // userprofile
@@ -300,7 +303,7 @@ app.put('/user/:username/', function (req, res) {
     .catch(function (error) {
       res.status(403).send({
         message: (typeof error === 'object' && error.message) ?
-                  error.message : 'Invalid file_id/token'
+                  error.message : 'Invalid username/email/token'
       });
     });
 });
