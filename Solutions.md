@@ -11,11 +11,6 @@
 - Profile: Each user has their own profile page, which lists their username, and list of uploaded files.
 - File View: This will allow the users to view the raw data of the file as well as read and write comments.
 
-## API: Github Gist
-
-The external API that we are using for Assignment 3 is the Github Gist API. It is being used to support the file storage features of our app.
-
-[Assignment 1 Proposal][a1-proposal] mentions Pastebin for file storage but Github Gist provides the same functionality, has a better REST API, supports CORS for the front-end. Pastebin results are returned in XML while Github Gist results are returned in JSON.
 
 ## End-Users
 
@@ -27,4 +22,4 @@ In our app there are 2 main end-users to consider.
 ## API Documentation
 
 
-[a1-proposal]: https://github.com/csc309-18s/assignment-1-jansanchitdanielshannon#project-proposal
+
