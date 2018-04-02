@@ -66,11 +66,17 @@ In our app there are 2 main end-users to consider.
 
 ### Hosting 
   - [Google Firebase][google-firebase]
+    - Used for hosting app web app online
 
 ### Database
   - [Firebase database][firebase-database]
+    - Data storage
 
+### API
+  - [Cloud Function][firebase-cloudFunction]
+    - Integrated to handle http request to the server.
 
 
 [google-firebase]: https://firebase.google.com/
 [firebase-database]: https://firebase.google.com/docs/database/
+[firebase-cloudFunction]: https://firebase.google.com/docs/functions/
