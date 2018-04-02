@@ -266,7 +266,6 @@ app.put('/user/:username/', function (req, res) {
       if (!snapshot) {
         return Promise.reject(err);
       }
-      //const users = snapshot.val();
       const user = snapshot.val();
       if (!user ||
           !user.token ||
@@ -276,25 +275,10 @@ app.put('/user/:username/', function (req, res) {
       }
 
       
-      //const matches = ((users[username].token && user[username].token.value) === req.body.token);
-      
-      // if (matches.length === 0 || (isTokenInvalid(user[username].token))) {
-      //   return Promise.reject(err);
-      // }
+    
       return refUser.child('email').set(req.body.email);
     })
-    // userprofile
-    // change the email
-    // .then (function (snapshot) {
-    //   if (!snapshot || !snapshot.val()) {
-    //     return Promise.reject(new Error('user doesn\'t exist'));
-    //   }
-    //   const newEmail = db.ref('/email/' + req.body.email).push();
-    //   return newEmail.set({
-    //     user: username,
-    //     email: req.body.email
-    //   });
-    // })
+    
     .then(function () {
       res.status(200).send({
         message: 'email changed'
