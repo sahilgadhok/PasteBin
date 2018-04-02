@@ -254,7 +254,7 @@ app.post('/comment/:file_id', function (req, res) {
 
 // Delete a user-owned file
 app.delete('/file/:file_id', function (req, res) {
-  if (!req.params.file_id || !req.body.token) {
+  if (!req.params.file_id || !req.query.token) {
     res.status(400).send({
       message: 'Missing file_id/token'
     });
@@ -262,7 +262,7 @@ app.delete('/file/:file_id', function (req, res) {
   }
 
   const db = admin.database();
-  getUserByToken(req.body.token)
+  getUserByToken(req.query.token)
     // Delete file id reference in user
     .then(function (user) {
       const file_id = ['/user', user.username, 'file', req.params.file_id].join('/');
@@ -278,7 +278,7 @@ app.delete('/file/:file_id', function (req, res) {
     })
     .then(function () {
       res.status(200).send({
-        message: 'user info is updated'
+        message: 'file is deleted'
       });
       return true;
     })

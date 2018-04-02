@@ -65,6 +65,24 @@ In our app there are 2 main end-users to consider.
         - 403 if any param or token are invalid
         - 200 if UPDATE succeeds
 
+### Files
+
+- POST '/file/:file_id' -> Add a new file
+    - Request
+        - token - user token obtained from signing in
+    - Response
+        - 400 if missing file_id or token
+        - 403 if invalid file_id or token
+        - 200 if file is created and user can see it in their profile
+
+- DELETE '/file/:file_id -> Delete a file
+    - Request
+        - token (query) - user token obtained from signing in
+    - Response
+        - 400 if missing file_id or token
+        - 403 if invalid file_id or token
+        - 200 if file and references to it (ex. comments) are deleted
+
 ### Comments
 
 - POST '/comment/:file_id' -> Add a new comment
@@ -75,6 +93,7 @@ In our app there are 2 main end-users to consider.
     - Response
         - 400 if and param is missing
         - 403 if token or file_id is invalid
+
 
 
 ## Backend Services
