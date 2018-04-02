@@ -270,10 +270,10 @@ app.put('/user/:username/', function (req, res) {
         return Promise.reject(err);
       }
 
-      console.log(users);
+      
       const matches = (users[username].token === req.body.token);
-      console.log(matches);
-      if (matches.length === 0) {
+      
+      if (matches.length === 0 || (isTokenInvalid(user[matches[0]].token))) {
         return Promise.reject(err);
       }
       username = matches[0];
