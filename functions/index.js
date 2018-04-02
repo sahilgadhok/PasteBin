@@ -189,7 +189,7 @@ app.post('/profile/:username', function (req, res) {
       if (!user ||
           !user.token ||
           user.token.value !== req.body.token ||
-          isTokenInvalid(token)) {
+          isTokenInvalid(user.token)) {
         return Promise.reject(err);
       }
 
@@ -258,8 +258,9 @@ app.put('/user/:username/', function (req, res) {
     });
     return;
   }
+
   // Find the user based on given token
-  let username;
+  const db = admin.database();
   const refUser = db.ref('/user/' + req.params.username);
   refUser.once('value')
     .then(function (snapshot) {
@@ -271,7 +272,7 @@ app.put('/user/:username/', function (req, res) {
       if (!user ||
           !user.token ||
           user.token.value !== req.body.token ||
-          isTokenInvalid(token)) {
+          isTokenInvalid(user.token)) {
         return Promise.reject(err);
       }
 
