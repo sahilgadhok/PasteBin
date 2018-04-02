@@ -312,6 +312,21 @@ app.post('/file', function(req, res) {
         created: (new Date()).toISOString()
       });
     })
+    .then (function () {
+      const newFileEntry = db.ref('/user/' + username + '/file/' + newFileEntry.key).push();
+      newFileEntry.set({
+        name: filename,
+        content: content,
+        username: username,
+        created: (new Date()).toISOString()
+      });
+    })
+    .then(function () {
+      res.status(200).send({
+          message: 'Uploaded file ' + req.body.username
+      });
+      return true;
+    })
     .catch(function (error) {
       res.status(403).send({
       message: 'Something went wrong'
