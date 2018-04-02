@@ -14,11 +14,11 @@ app.use(cors);
 // Password hashing
 const argon2 = require('@phc/argon2');
 
-// Check token timestamp if it's past 5 minutes
+// Check token timestamp if it's past 30 minutes
 function isTokenInvalid(token) {
   const curtime = Date.now();
   const invalid = typeof token !== 'object' ||
-                  ((curtime - token.timestamp) > 5 * 60 * 1000);
+                  ((curtime - token.timestamp) > 30 * 60 * 1000);
   return invalid;
 }
 
