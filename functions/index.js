@@ -234,7 +234,7 @@ app.post('/comment/:file_id', function (req, res) {
       return newComment.set({
         user: username,
         content: req.body.comment,
-        created: (new Date()).toISOString()
+        created: admin.database.ServerValue.TIMESTAMP
       });
     })
     .then(function () {
@@ -294,7 +294,7 @@ app.put('/user/:username/', function (req, res) {
 
 // Upload file
 app.post('/file', function(req, res) {
-  if (!req.body.filename || !req.body.content) {
+  if (!req.body.name || !req.body.content || !req.body.token) {
     res.status(400).send({
         message: 'Missing filename/content'
     });
@@ -302,28 +302,26 @@ app.post('/file', function(req, res) {
   }
 
   const db = admin.database();
-  getUserByToken(req.body.sessionToken)
+  let username;
+  let newFileEntry;
+  getUserByToken(req.body.token)
     .then(function (user) {
-      const newFileEntry = db.ref('/file').push();
-      newFileEntry.set({
-        name: filename,
-        content: content,
-        username: username,
-        created: (new Date()).toISOString()
+      username = user.name;
+      newFileEntry = db.ref('/file').push();
+      return newFileEntry.set({
+        name: req.body.name,
+        content: req.body.constant,
+        username: user.name,
+        created: admin.database.ServerValue.TIMESTAMP
       });
     })
     .then (function () {
-      const newFileEntry = db.ref('/user/' + username + '/file/' + newFileEntry.key).push();
-      newFileEntry.set({
-        name: filename,
-        content: content,
-        username: username,
-        created: (new Date()).toISOString()
-      });
+      return db.ref(['/user', username, 'file', newFileEntry.key].join('/')).set(1);
     })
     .then(function () {
       res.status(200).send({
-          message: 'Uploaded file ' + req.body.username
+          id: newFileEntry.key,
+          message: 'File created'
       });
       return true;
     })
