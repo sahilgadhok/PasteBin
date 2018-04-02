@@ -9,7 +9,7 @@
     <div v-else>
       <button class="btn btn-default" type="button"
       v-on:click="openSignInModal()">Sign In</button>
-      <button class="btn btn-default" type="button" disabled
+      <button class="btn btn-default" type="button"
       v-on:click="openSignUpModal()">Sign Up</button>
     </div>
     <modal name="signIn" width="300" v-bind:click-to-close="false"
@@ -56,6 +56,18 @@
             v-on:click="signUp()">Sign Up</button>
           </div>
         </form>
+      </div>
+    </modal>
+    <modal name="signupSuccess" width="300" height="auto" v-bind:adaptive="true">
+      <div class="container-fluid" style="margin-top:20px">
+        <div class="panel panel-success">
+          <div class="panel-heading">
+            <h3 class="panel-title">Signup Successful</h3>
+          </div>
+          <div class="panel-body">
+            <p>You can sign in with your username and password via the Sign In button</p>
+          </div>
+        </div>
       </div>
     </modal>
   </div>
@@ -135,7 +147,21 @@ export default {
       this.signUpForm.password = '';
     },
     signUp: function () {
-      this.closeSignUpModal();
+      const vm = this;
+      axios.post(cloudUrl + '/signup', {
+          username: this.signUpForm.username,
+          password: this.signUpForm.password
+        })
+        .then(function () {
+          vm.closeSignUpModal();
+          vm.$modal.show('signupSuccess');
+        })
+        .catch(function (error) {
+          console.error(error);
+          if (error.message) {
+            console.error(error.message);
+          }
+        });
     }
   }
 }
