@@ -296,7 +296,7 @@ app.put('/user/:username/', function (req, res) {
 app.post('/file', function(req, res) {
   if (!req.body.name || !req.body.content || !req.body.token) {
     res.status(400).send({
-        message: 'Missing filename/content'
+        message: 'Missing name/content'
     });
     return;
   }
@@ -306,12 +306,12 @@ app.post('/file', function(req, res) {
   let newFileEntry;
   getUserByToken(req.body.token)
     .then(function (user) {
-      username = user.name;
+      username = user.username;
       newFileEntry = db.ref('/file').push();
       return newFileEntry.set({
         name: req.body.name,
-        content: req.body.constant,
-        username: user.name,
+        content: req.body.content,
+        username: username,
         created: admin.database.ServerValue.TIMESTAMP
       });
     })
@@ -327,7 +327,8 @@ app.post('/file', function(req, res) {
     })
     .catch(function (error) {
       res.status(403).send({
-        message: 'Something went wrong'
+        message: (typeof error === 'object' && error.message) ?
+                  error.message : 'Invalid token'
     });
   });
 });

@@ -49,6 +49,7 @@ export default {
       }
     };
   },
+  store: ['sessionToken'],
   methods: {
     checkFile: function (event) {
       const files = event.target.files;
@@ -66,16 +67,21 @@ export default {
 
       function send(filename, content) {
           if (vm.sessionToken) {
+            vm.newFile.show = false;
             axios.post(cloudUrl + '/file', {
                 name: filename,
                 content: content,
-                token: this.sessionToken
+                token: vm.sessionToken
               })
               .then(function (response) {
-                // refresh file contents
-                console.log(response.data);
+                vm.newFile.url = '/file/' + response.data.id;
+                vm.newFile.show = true;
+                vm.inputDisabled = false;
               })
               .catch(function (error) {
+                vm.error = 'Failed to create the file';
+                vm.inputDisabled = false;
+
                 console.error(error);
                 if (error.message) {
                   console.error(error.message);
