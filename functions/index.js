@@ -259,7 +259,8 @@ app.put('/user/:username/', function (req, res) {
   }
   // Find the user based on given token
   let username;
-  const refUser = db.ref('/user/' + req.params.username).once('value')
+  const refUser = db.ref('/user/' + req.params.username);
+  refUser.once('value')
     .then(function (snapshot) {
       const err = new Error('Invalid token');
       if (!snapshot) {
