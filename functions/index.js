@@ -14,6 +14,14 @@ app.use(cors);
 // Password hashing
 const argon2 = require('@phc/argon2');
 
+// Check token timestamp if it's past 5 minutes
+function isTokenInvalid(token) {
+  const curtime = Date.now();
+  const invalid = typeof token !== 'object' ||
+                  ((curtime - token.timestamp) > 5 * 60 * 1000);
+  return invalid;
+}
+
 // Return a promise, containing the user referred to by this token
 // Return Value: {username, info}
 function getUserByToken(token) {
@@ -33,8 +41,10 @@ function getUserByToken(token) {
         return Promise.reject(err);
       }
 
-      const matches = Object.keys(users).filter((key) => (users[key].token === token));
-      if (matches.length === 0) {
+      const matches = Object.keys(users).filter((key) => (
+        users[key].token && users[key].token.value === token
+      ));
+      if (matches.length === 0 || (isTokenInvalid(users[matches[0]].token))) {
         return Promise.reject(err);
       }
       return Promise.resolve({username: matches[0], info: users[matches[0]]});
@@ -104,21 +114,16 @@ app.post('/signin', function (req, res) {
       return argon2.verify(user.password, req.body.password);
     })
     .then(function () {
-      if (user.token) {
-        return Promise.resolve(user.token);
-      }
       return admin.auth().createCustomToken(req.body.username);
     })
     .then(function (token) {
       user.token = token;
-      return userRef.child('token').set(token);
+      return userRef.child('token').set({
+        value: token,
+        timestamp: admin.database.ServerValue.TIMESTAMP
+      });
     })
     .then(function () {
-      // Invalidate the token after 30 minutes
-      setTimeout(function (userRef) {
-        userRef.child('token').set(null);
-      }, 30 * 60 * 1000, userRef);
-
       res.status(200).send({
         token: user.token
       });
@@ -145,7 +150,7 @@ app.post('/signout', function (req, res) {
   userRef.once('value')
     .then(function (snapshot) {
       const user = snapshot.val();
-      if (!user || (user.token && user.token !== req.body.token)) {
+      if (!user || (user.token && user.token.value !== req.body.token)) {
         return Promise.reject(new Error('Invalid username/token'))
       }
 
@@ -181,7 +186,10 @@ app.post('/profile/:username', function (req, res) {
         return Promise.reject(err);
       }
       const user = snapshot.val();
-      if (!user || user.token !== req.body.token) {
+      if (!user ||
+          !user.token ||
+          user.token.value !== req.body.token ||
+          isTokenInvalid(token)) {
         return Promise.reject(err);
       }
 
