@@ -195,7 +195,8 @@ app.post('/profile/:username', function (req, res) {
 
       res.status(200).send({
         username: req.params.username,
-        email: user.email || ''
+        email: user.email || '',
+        file: user.file || {}
       });
       return true;
     })
@@ -315,8 +316,10 @@ app.post('/file', function(req, res) {
         created: admin.database.ServerValue.TIMESTAMP
       });
     })
+    // Save the unique file key and its filename for convenience
     .then (function () {
-      return db.ref(['/user', username, 'file', newFileEntry.key].join('/')).set(1);
+      const file_path = ['/user', username, 'file', newFileEntry.key].join('/');
+      return db.ref(file_path).set(req.body.name);
     })
     .then(function () {
       res.status(200).send({
