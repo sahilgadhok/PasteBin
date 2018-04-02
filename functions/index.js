@@ -195,7 +195,8 @@ app.post('/profile/:username', function (req, res) {
 
       res.status(200).send({
         username: req.params.username,
-        email: user.email || ''
+        email: user.email || '',
+        file: user.file || {}
       });
       return true;
     })
@@ -234,7 +235,7 @@ app.post('/comment/:file_id', function (req, res) {
       return newComment.set({
         user: username,
         content: req.body.comment,
-        created: (new Date()).toISOString()
+        created: admin.database.ServerValue.TIMESTAMP
       });
     })
     .then(function () {
@@ -290,6 +291,49 @@ app.put('/user/:username/', function (req, res) {
                   error.message : 'Invalid username/token'
       });
     });
+});
+
+// Upload file
+app.post('/file', function(req, res) {
+  if (!req.body.name || !req.body.content || !req.body.token) {
+    res.status(400).send({
+        message: 'Missing name/content'
+    });
+    return;
+  }
+
+  const db = admin.database();
+  let username;
+  let newFileEntry;
+  getUserByToken(req.body.token)
+    .then(function (user) {
+      username = user.username;
+      newFileEntry = db.ref('/file').push();
+      return newFileEntry.set({
+        name: req.body.name,
+        content: req.body.content,
+        username: username,
+        created: admin.database.ServerValue.TIMESTAMP
+      });
+    })
+    // Save the unique file key and its filename for convenience
+    .then (function () {
+      const file_path = ['/user', username, 'file', newFileEntry.key].join('/');
+      return db.ref(file_path).set(req.body.name);
+    })
+    .then(function () {
+      res.status(200).send({
+          id: newFileEntry.key,
+          message: 'File created'
+      });
+      return true;
+    })
+    .catch(function (error) {
+      res.status(403).send({
+        message: (typeof error === 'object' && error.message) ?
+                  error.message : 'Invalid token'
+    });
+  });
 });
 
 exports.api = functions.https.onRequest(app);

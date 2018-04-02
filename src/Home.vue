@@ -26,9 +26,12 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 const firebase = (typeof window === 'object' &&
                   typeof window.firebase === 'object') ?
                   window.firebase : null;
+const cloudUrl = 'https://us-central1-filehub-f9a91.cloudfunctions.net/api';
 
 export default {
   name: 'Home',
@@ -46,6 +49,7 @@ export default {
       }
     };
   },
+  store: ['sessionToken'],
   methods: {
     checkFile: function (event) {
       const files = event.target.files;
@@ -62,6 +66,31 @@ export default {
       vm.error = '';
 
       function send(filename, content) {
+          if (vm.sessionToken) {
+            vm.newFile.show = false;
+            axios.post(cloudUrl + '/file', {
+                name: filename,
+                content: content,
+                token: vm.sessionToken
+              })
+              .then(function (response) {
+                vm.newFile.url = '/file/' + response.data.id;
+                vm.newFile.show = true;
+                vm.inputDisabled = false;
+              })
+              .catch(function (error) {
+                vm.error = 'Failed to create the file';
+                vm.inputDisabled = false;
+
+                console.error(error);
+                if (error.message) {
+                  console.error(error.message);
+                }
+              });
+
+            return;
+          }
+
           if (!firebase) {
             vm.error = 'Failed to create the file';
             vm.inputDisabled = false;

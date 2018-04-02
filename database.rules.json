@@ -7,12 +7,17 @@
         },
         "email": {
           ".validate": "newData.isString()"
+        },
+        "file": {
+          "$fid": {
+            ".validate": "newData.isString()"
+          }
         }
       }
     },
     "file": {
       "$id": {
-        ".read": "!data.child('username').exists()",
+        ".read": true,
         ".write": "!data.exists() && !newData.child('username').exists()",
         "name": {
           ".validate": "newData.isString()"

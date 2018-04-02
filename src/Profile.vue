@@ -32,8 +32,8 @@
             <h3 class="panel-title">Uploads</h3>
           </div>
           <div class="panel-body" v-if="sessionToken && profileInfo.files">
-            <h4 v-for="paste in profileInfo.files" v-bind:key="paste.name">
-              <router-link exact v-bind:to="paste.url">{{paste.name}}</router-link>
+            <h4 v-for="file in profileInfo.files" v-bind:key="makeRowKey(file)">
+              <router-link exact v-bind:to="'/file/' + file.id">{{file.name}}</router-link>
             </h4>
           </div>
           <div class="panel-body" v-else>
@@ -75,7 +75,15 @@ export default {
           token: this.sessionToken
         })
         .then(function (response) {
-          vm.profileInfo = response.data;
+          const file = response.data.file;
+          vm.profileInfo = {
+            username: response.data.username,
+            email: response.data.email,
+            files: Object.keys(file).map((key) => ({
+              id: key,
+              name: file[key]
+            }))
+          }
         })
         .catch(function (error) {
           console.error(error);
@@ -93,6 +101,9 @@ export default {
         .catch(function (error) {
           console.error(error);
         })
+    },
+    makeRowKey: function (row) {
+      return [row.id, Date.now()].join('-');
     }
   },
   created: function () {
