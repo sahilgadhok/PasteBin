@@ -1,12 +1,12 @@
 {
-  "name": "csc309-a2",
+  "name": "csc309-a3",
   "description": "CSC309 Project Front-End",
   "version": "1.0.0",
   "author": "",
   "license": "MIT",
   "private": true,
   "scripts": {
-    "lint": "eslint --ext .vue ./src",
+    "lint": "eslint --ext .js,.vue ./src",
     "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
