@@ -34,6 +34,8 @@
           <div class="panel-body" v-if="sessionToken && profileInfo.files">
             <h4 v-for="file in profileInfo.files" v-bind:key="makeRowKey(file)">
               <router-link exact v-bind:to="'/file/' + file.id">{{file.name}}</router-link>
+              <button class="pull-right btn btn-danger" type="button"
+              v-on:click="deleteFile(file.id)">Delete<button>
             </h4>
           </div>
           <div class="panel-body" v-else>
@@ -103,8 +105,11 @@ export default {
         })
     },
     makeRowKey: function (row) {
-      return [row.id, Date.now()].join('-');
-    }
+      return [row.name, row.id, Date.now()].join('-');
+    },
+    deleteFile: function (file_id) {
+      console.log(file_id);
+    },
   },
   created: function () {
     this.updateProfile(this.username);
