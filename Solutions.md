@@ -1,6 +1,6 @@
 # Solutions
 
-A one day extension was used for this assignment.
+A one day 10% deduction will be used for this assignment.
 
 ## Features
 - Home:
@@ -104,8 +104,31 @@ Refer to database.rules.json for the schema.
 ### Files
 
 - GET '/file/:file_id' -> Get a public file based on given file id
+    - Request
+        - No further params
+    - Response
+        - 200 with file content, creation date and name if it exists
+        - 200 with null content if no such file ID exists.
+
 - GET '/public_files/' -> Get UUIDs of all public files in '/file/'
+    - Request
+        - No further params
+    - Response
+        - 200 with UUIDs of all public files.
+        
 - GET '/comment/:file_id/' -> Get all commments for the given file id
+    - Request 
+        - No further params
+    - Response
+        - 200 with json of mappings of comment_ids to comment information such as creation date, content and user that posted
+        - 200 with null if no such endpoint exists
+
+- GET '/comment/:file_id/:comment_id' -> Get the commment with comment id for the given file id
+    - Request 
+        - No further params
+    - Response
+        - 200 with comment information such as creation date, content and user that posted
+        - 200 with null if no such endpoint exists
 
 ## Backend Services
 
