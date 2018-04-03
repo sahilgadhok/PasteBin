@@ -21,7 +21,7 @@ In our app there are 2 main end-users to consider.
 
 - The other end-user is the one that signs up for the website. This user is one that needs a quick and easy way to upload a file for use later, they also want share this upload with others to get reactions or feedback from other viewers of the file.
 
-## API Documentation
+## Cloud Server API
 
 ### Users
 
@@ -94,7 +94,18 @@ In our app there are 2 main end-users to consider.
         - 400 if and param is missing
         - 403 if token or file_id is invalid
 
+## Database Server API
 
+Append `.json` on a database endpoint to get a JSON-formatted snapshot.
+If there invalid parameters, then it returns `null`.
+If the endpoint doesn't exist, then it returns `{"error" : "Permission denied"}`.
+Refer to database.rules.json for the schema.
+
+### Files
+
+- GET '/file/:file_id' -> Get a public file based on given file id
+- GET '/public_files/' -> Get UUIDs of all public files in '/file/'
+- GET '/comment/:file_id/' -> Get all commments for the given file id
 
 ## Backend Services
 
@@ -107,7 +118,7 @@ In our app there are 2 main end-users to consider.
 ### Database
 
 - hosted at [https://filehub-f9a91.firebaseio.com][filehub-db]
-- powered by [Firebase Database][firebase-database]
+- NOSQL database powered by [Firebase Realtime Database][firebase-database]
 - centralized data storage for files, users, comments, etc.
 - supports REST API for public access
 
